@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Roteiro Litúrgico Musical</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16130f;--ink2:#2a261e;--muted:#7a7165;--faint:#b0a898;
+  --surface:#fffdf8;--soft:#faf6ee;--paper:#f4efe7;--border:rgba(42,37,31,.13);--border-s:rgba(42,37,31,.22);
+  --gold:#b88b37;--gold-s:#ead7a5;--gold-bg:rgba(184,139,55,.08);
+  --green:#2a7d52;--green-bg:rgba(42,125,82,.1);
+  --blue:#2060a0;--blue-bg:rgba(32,96,160,.1);
+  --danger:#9b3525;
+  --r:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"DM Sans",sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;overflow-x:hidden;}
+button,input,textarea,select{font:inherit;cursor:pointer;}
+svg{flex-shrink:0;}
+
+/* ════════════════════════════════
+   SCREEN SYSTEM
+   ════════════════════════════════ */
+.screen{display:none;min-height:100vh;flex-direction:column;}
+.screen.active{display:flex;}
+
+/* ════════════════════════════════
+   HOME SCREEN
+   ════════════════════════════════ */
+#home{
+  background:var(--ink);
+  position:relative;overflow:hidden;
+  align-items:center;justify-content:center;
+  padding:2rem 1rem 3rem;
+}
+
+/* staff lines decoration */
+.staff{
+  position:absolute;left:0;right:0;
+  pointer-events:none;
+  top:50%;transform:translateY(-50%);
+  height:120px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  opacity:.06;
+}
+.staff-line{height:1px;background:#ead7a5;width:100%;}
+
+/* treble clef SVG via inline, positioned left */
+.clef-wrap{
+  position:absolute;left:clamp(8px,4vw,60px);top:50%;
+  transform:translateY(-58%);
+  opacity:.13;
+  pointer-events:none;
+}
+
+/* notes scattered along staff */
+.notes-deco{
+  position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
+  height:120px;
+  pointer-events:none;
+  opacity:.12;
+}
+
+.home-inner{
+  position:relative;z-index:2;
+  text-align:center;
+  max-width:520px;
+  width:100%;
+}
+.home-kicker{
+  color:var(--gold-s);font-size:10px;letter-spacing:4px;text-transform:uppercase;
+  margin-bottom:1rem;font-weight:400;
+}
+.home-title{
+  font-family:"Cormorant Garamond",serif;
+  font-size:clamp(32px,7vw,56px);
+  font-weight:600;line-height:.95;
+  color:#fff;
+  margin-bottom:.5rem;
+}
+.home-title em{font-style:italic;color:var(--gold-s);}
+.home-date{
+  color:rgba(234,215,165,.55);font-size:12px;letter-spacing:1px;
+  margin-bottom:2.5rem;font-weight:300;
+}
+
+/* menu blocks */
+.menu-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;width:100%;
+  margin-bottom:10px;
+}
+.menu-btn{
+  background:rgba(255,253,248,.05);
+  border:1px solid rgba(234,215,165,.18);
+  border-radius:12px;
+  padding:1.4rem 1rem;
+  display:flex;flex-direction:column;align-items:center;gap:.6rem;
+  color:#fff;
+  transition:background .16s,border-color .16s,transform .14s;
+  text-align:center;
+}
+.menu-btn:hover{
+  background:rgba(234,215,165,.09);
+  border-color:rgba(234,215,165,.4);
+  transform:translateY(-2px);
+}
+.menu-btn:active{transform:translateY(0);}
+.menu-icon{
+  width:42px;height:42px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(234,215,165,.1);
+  border:1px solid rgba(234,215,165,.2);
+  font-size:20px;
+}
+.menu-label{font-size:13px;font-weight:600;color:var(--gold-s);letter-spacing:.4px;}
+.menu-desc{font-size:10px;color:rgba(255,255,255,.4);line-height:1.4;}
+.menu-btn-wide{
+  grid-column:1/-1;
+  flex-direction:row;gap:1rem;
+  padding:1.1rem 1.4rem;
+  align-items:center;
+  text-align:left;
+}
+.menu-btn-wide .menu-desc{margin-top:1px;}
+
+/* ════════════════════════════════
+   SUB-PAGE SHELL (shared)
+   ════════════════════════════════ */
+.subpage-header{
+  background:var(--ink);color:#fff;
+  padding:12px 16px;
+  display:flex;align-items:center;gap:10px;
+  border-bottom:2px solid var(--gold);
+  flex-shrink:0;
+}
+.back-btn{
+  background:none;border:1px solid rgba(234,215,165,.28);border-radius:6px;
+  color:var(--gold-s);padding:5px 10px;font-size:11px;
+  display:flex;align-items:center;gap:5px;
+  transition:background .13s;flex-shrink:0;
+}
+.back-btn:hover{background:rgba(234,215,165,.1);}
+.back-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.subpage-title-block{flex:1;min-width:0;}
+.subpage-kicker{color:var(--gold-s);font-size:9px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:2px;}
+.subpage-h1{font-family:"Cormorant Garamond",serif;font-size:clamp(18px,3.5vw,26px);font-weight:600;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.subpage-sub{display:block;color:#c8b880;font-size:11px;margin-top:3px;font-weight:300;}
+.header-btn-cluster{display:flex;gap:0;border:1px solid rgba(234,215,165,.28);border-radius:7px;overflow:hidden;flex-shrink:0;}
+.hbtn{background:none;color:var(--gold-s);border:none;border-left:1px solid rgba(234,215,165,.2);padding:6px 10px;font-size:11px;display:flex;align-items:center;gap:5px;transition:background .13s;}
+.hbtn:first-child{border-left:none;}
+.hbtn:hover{background:rgba(234,215,165,.1);}
+.hbtn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.hep{display:none;background:#1e1b16;border-bottom:1px solid rgba(234,215,165,.1);}
+.hep.open{display:block;}
+.hep-inner{max-width:960px;margin:0 auto;padding:10px 16px;display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;}
+.hep-f{display:flex;flex-direction:column;gap:3px;flex:1;min-width:120px;}
+.hep-f label{color:var(--faint);font-size:9px;letter-spacing:1.2px;text-transform:uppercase;}
+.hep-f input{border:1px solid rgba(234,215,165,.25);border-radius:6px;background:rgba(255,253,248,.06);color:#fff;padding:7px 10px;outline:none;width:100%;}
+.hep-f input:focus{border-color:var(--gold);}
+.save-hep{background:var(--gold);color:var(--ink);border:none;border-radius:6px;padding:7px 14px;font-size:11px;font-weight:700;}
+.save-hep:hover{opacity:.85;}
+
+/* ════════════════════════════════
+   REPERTÓRIO SCREEN
+   ════════════════════════════════ */
+.rep-page{max-width:960px;width:100%;margin:0 auto;padding:12px 14px;flex:1;overflow-y:auto;}
+
+/* topline */
+.topline{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:9px;border-bottom:1px solid var(--border);margin-bottom:8px;flex-wrap:wrap;}
+.tl-left{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.tl-label{font-family:"Cormorant Garamond",serif;font-size:16px;font-weight:600;}
+.tl-edit-wrap{display:none;align-items:center;gap:6px;}
+.tl-edit-wrap.open{display:flex;}
+.tl-edit-wrap input{border:1px solid var(--border-s);border-radius:6px;background:var(--surface);color:var(--ink);padding:4px 8px;outline:none;font-size:12px;width:150px;}
+.tl-right{display:flex;gap:0;border:1px solid var(--border-s);border-radius:7px;overflow:hidden;flex-shrink:0;}
+.tlbtn{background:rgba(255,253,248,.8);color:var(--muted);border:none;border-left:1px solid var(--border);padding:5px 10px;font-size:11px;display:flex;align-items:center;gap:5px;transition:background .12s,color .12s;}
+.tlbtn:first-child{border-left:none;}
+.tlbtn:hover{background:var(--surface);color:var(--ink);}
+.tlbtn.gold{color:var(--gold);font-weight:600;}
+.tlbtn.gold:hover{color:#9a7228;}
+.tlbtn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+/* song list */
+.repertoire{display:flex;flex-direction:column;gap:3px;}
+.song-row{
+  display:grid;grid-template-columns:50px minmax(0,1fr) 156px;
+  align-items:stretch;background:var(--surface);border:1px solid var(--border);
+  border-radius:7px;overflow:hidden;transition:border-color .14s,box-shadow .14s;
+}
+.song-row:hover{border-color:rgba(184,139,55,.3);box-shadow:0 2px 8px rgba(24,22,18,.07);}
+.song-row.done{opacity:.5;}
+.song-row.done .song-title{text-decoration:line-through;color:var(--faint);}
+.num-block{
+  background:linear-gradient(180deg,#27241e,#151310);color:#fff;
+  border-right:2px solid var(--gold);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  padding:6px 4px;cursor:pointer;user-select:none;-webkit-user-select:none;
+  transition:background .13s;
+}
+.num-block:hover{background:linear-gradient(180deg,#332f27,#1e1b15);}
+.chk{width:14px;height:14px;border:1.5px solid rgba(234,215,165,.4);border-radius:3px;display:flex;align-items:center;justify-content:center;transition:background .13s,border-color .13s;}
+.chk svg{width:9px;height:9px;stroke:var(--gold-s);opacity:0;transition:opacity .13s;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;}
+.song-row.done .chk{background:var(--gold);border-color:var(--gold);}
+.song-row.done .chk svg{opacity:1;}
+.num-val{font-family:"Cormorant Garamond",serif;font-size:18px;line-height:1;font-weight:600;}
+.song-main{padding:7px 11px;display:flex;flex-direction:column;justify-content:center;gap:2px;min-width:0;}
+.pill{display:inline-block;border:1px solid rgba(93,110,77,.2);background:rgba(93,110,77,.07);color:#4a5c3c;border-radius:999px;padding:1px 7px;font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;width:fit-content;}
+.song-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.song-title.empty{color:var(--faint);font-style:italic;font-weight:400;}
+.song-tools{border-left:1px solid var(--border);display:grid;grid-template-rows:1fr 1fr;background:rgba(250,246,238,.5);}
+.pdf-btns,.row-btns{display:grid;grid-template-columns:1fr 1fr;}
+.pdf-btns{border-bottom:1px solid var(--border);}
+.btn-letra,.btn-cifra,.btn-edit,.btn-clear{min-height:26px;border:none;background:transparent;font-size:11px;font-weight:600;transition:background .12s,color .12s;}
+.btn-letra{color:var(--green);}
+.btn-letra:hover{background:var(--green-bg);}
+.btn-cifra{color:var(--blue);border-left:1px solid var(--border);}
+.btn-cifra:hover{background:var(--blue-bg);}
+.btn-edit{color:var(--muted);}
+.btn-edit:hover{background:var(--paper);color:var(--ink);}
+.btn-clear{color:rgba(155,53,37,.55);border-left:1px solid var(--border);}
+.btn-clear:hover{background:#fff0ed;color:var(--danger);}
+.song-edit{display:none;grid-column:1/-1;border-top:1px solid var(--border);background:var(--soft);padding:9px 12px;gap:7px;flex-wrap:wrap;align-items:flex-end;}
+.song-row.editing .song-edit{display:flex;}
+.se-f{display:flex;flex-direction:column;gap:3px;flex:1;min-width:110px;}
+.se-f label,.ug label{color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase;}
+.se-f input{border:1px solid var(--border-s);border-radius:6px;background:var(--surface);color:var(--ink);padding:5px 8px;outline:none;width:100%;}
+.se-f input:focus{border-color:var(--gold);}
+.ug{display:flex;flex-direction:column;gap:3px;flex:1;min-width:110px;}
+.file-input{border:1px dashed var(--border-s);background:var(--surface);border-radius:6px;padding:5px 8px;color:var(--muted);font-size:10px;width:100%;}
+.hint{font-size:9px;color:var(--faint);}
+.save-btn{background:var(--ink);color:var(--gold-s);border:none;border-radius:6px;padding:6px 13px;font-size:11px;font-weight:600;white-space:nowrap;align-self:flex-end;}
+.save-btn:hover{background:var(--ink2);}
+
+/* PDF VIEWER */
+.viewer{display:none;position:fixed;inset:0;z-index:50;background:rgba(18,16,12,.75);align-items:center;justify-content:center;padding:14px;}
+.viewer.open{display:flex;}
+.vbox{width:100%;max-width:840px;height:min(92vh,840px);background:var(--surface);border:1px solid rgba(234,215,165,.35);border-radius:12px;box-shadow:0 28px 80px rgba(0,0,0,.35);overflow:hidden;display:flex;flex-direction:column;}
+.vhead{background:var(--ink);color:#fff;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid rgba(234,215,165,.38);flex-shrink:0;}
+.vhead-info h3{font-family:"Cormorant Garamond",serif;font-size:18px;font-weight:600;line-height:1;}
+.vhead-info p{font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:var(--gold-s);margin-top:2px;}
+.vok{background:var(--gold);color:var(--ink);border:none;border-radius:6px;padding:7px 20px;font-size:12px;font-weight:700;transition:opacity .13s,transform .12s;flex-shrink:0;}
+.vok:hover{opacity:.85;transform:translateY(-1px);}
+.pdf-frame{flex:1;width:100%;border:0;background:#ebe9e3;display:block;}
+.empty-view{flex:1;display:grid;place-items:center;color:var(--muted);font-family:"Cormorant Garamond",serif;font-size:20px;text-align:center;padding:24px;}
+
+/* ════════════════════════════════
+   REPERTÓRIOS (HISTÓRICO)
+   ════════════════════════════════ */
+#historico .rep-page{display:flex;flex-direction:column;}
+.hist-list{display:flex;flex-direction:column;gap:8px;flex:1;}
+.hist-empty{color:var(--faint);font-family:"Cormorant Garamond",serif;font-size:18px;text-align:center;padding:3rem;font-style:italic;}
+.hist-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:12px 14px;display:flex;align-items:center;gap:12px;
+  cursor:pointer;transition:border-color .14s,box-shadow .14s;
+}
+.hist-card:hover{border-color:rgba(184,139,55,.35);box-shadow:0 2px 10px rgba(24,22,18,.08);}
+.hist-num{font-family:"Cormorant Garamond",serif;font-size:28px;font-weight:600;color:var(--gold);min-width:36px;text-align:center;line-height:1;}
+.hist-divider{width:1px;height:36px;background:var(--border);}
+.hist-body{flex:1;min-width:0;}
+.hist-title{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hist-meta{font-size:11px;color:var(--muted);margin-top:2px;}
+.hist-del{background:none;border:1px solid rgba(155,53,37,.25);border-radius:5px;padding:4px 8px;color:rgba(155,53,37,.6);font-size:10px;transition:background .13s,color .13s;flex-shrink:0;}
+.hist-del:hover{background:#fff0ed;color:var(--danger);}
+
+/* ════════════════════════════════
+   EVENTOS / CALENDÁRIO
+   ════════════════════════════════ */
+#eventos .rep-page{display:flex;flex-direction:column;gap:14px;}
+.cal-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.cal-head{background:var(--ink);color:#fff;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;}
+.cal-head span{font-family:"Cormorant Garamond",serif;font-size:18px;font-weight:600;}
+.cal-nav{background:none;border:1px solid rgba(234,215,165,.25);border-radius:5px;color:var(--gold-s);padding:4px 10px;font-size:13px;transition:background .12s;}
+.cal-nav:hover{background:rgba(234,215,165,.1);}
+.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border);}
+.cal-dow span{text-align:center;padding:7px 4px;font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--faint);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);}
+.cal-day{
+  min-height:48px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;padding:6px 4px;gap:3px;
+  cursor:pointer;transition:background .12s;position:relative;
+}
+.cal-day:nth-child(7n){border-right:none;}
+.cal-day.other-month{background:rgba(244,239,231,.4);}
+.cal-day.other-month .cal-day-num{color:var(--faint);}
+.cal-day.today{background:var(--gold-bg);}
+.cal-day.today .cal-day-num{color:var(--gold);font-weight:700;}
+.cal-day.has-event::after{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold);display:block;}
+.cal-day:hover{background:rgba(184,139,55,.08);}
+.cal-day-num{font-size:13px;font-weight:500;line-height:1;}
+.cal-day-label{font-size:9px;color:var(--green);font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;}
+
+.event-panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;display:none;}
+.event-panel.open{display:block;}
+.event-panel h3{font-family:"Cormorant Garamond",serif;font-size:17px;font-weight:600;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.ep-row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;}
+.ep-f{display:flex;flex-direction:column;gap:3px;flex:1;min-width:120px;}
+.ep-f label{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);}
+.ep-f input{border:1px solid var(--border-s);border-radius:6px;background:var(--soft);color:var(--ink);padding:7px 10px;outline:none;width:100%;font-size:13px;}
+.ep-f input:focus{border-color:var(--gold);}
+.ep-btns{display:flex;gap:7px;flex-shrink:0;}
+.btn-ep-go{background:var(--ink);color:var(--gold-s);border:none;border-radius:6px;padding:7px 16px;font-size:12px;font-weight:600;}
+.btn-ep-go:hover{background:var(--ink2);}
+.btn-ep-cancel{background:none;border:1px solid var(--border-s);border-radius:6px;padding:7px 12px;font-size:12px;color:var(--muted);}
+.btn-ep-cancel:hover{background:var(--soft);}
+
+/* ════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════ */
+@media(max-width:600px){
+  .menu-grid{grid-template-columns:1fr;}
+  .menu-btn-wide{grid-column:auto;}
+  .song-row{grid-template-columns:46px 1fr;}
+  .song-tools{grid-column:1/-1;border-left:none;border-top:1px solid var(--border);}
+  .song-title{white-space:normal;font-size:12px;}
+  .num-val{font-size:15px;}
+  .cal-day{min-height:38px;padding:4px 2px;}
+  .cal-day-num{font-size:11px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     HOME SCREEN
+     ══════════════════════════════ -->
+<div class="screen active" id="home">
+
+  <!-- staff lines -->
+  <div class="staff" aria-hidden="true">
+    <div class="staff-line"></div>
+    <div class="staff-line"></div>
+    <div class="staff-line"></div>
+    <div class="staff-line"></div>
+    <div class="staff-line"></div>
+  </div>
+
+  <!-- Treble clef -->
+  <div class="clef-wrap" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" width="90" height="200" viewBox="0 0 90 200" fill="none">
+      <path d="M45 10 C45 10 25 35 25 70 C25 95 38 108 50 115 C38 122 20 138 20 162 C20 182 33 196 48 196 C63 196 76 184 76 168 C76 150 63 140 50 132 C50 132 68 120 68 95 C68 72 55 52 45 38 L45 10Z" stroke="#ead7a5" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="44" cy="168" r="12" stroke="#ead7a5" stroke-width="3"/>
+      <path d="M44 156 C44 156 35 148 35 138 C35 125 44 118 50 115" stroke="#ead7a5" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <!-- right side clef mirror -->
+  <div class="clef-wrap" aria-hidden="true" style="left:auto;right:clamp(8px,4vw,60px);transform:translateY(-58%) scaleX(-1);opacity:.07;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="90" height="200" viewBox="0 0 90 200" fill="none">
+      <path d="M45 10 C45 10 25 35 25 70 C25 95 38 108 50 115 C38 122 20 138 20 162 C20 182 33 196 48 196 C63 196 76 184 76 168 C76 150 63 140 50 132 C50 132 68 120 68 95 C68 72 55 52 45 38 L45 10Z" stroke="#ead7a5" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="44" cy="168" r="12" stroke="#ead7a5" stroke-width="3"/>
+      <path d="M44 156 C44 156 35 148 35 138 C35 125 44 118 50 115" stroke="#ead7a5" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <!-- musical notes scattered -->
+  <svg class="notes-deco" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 120" preserveAspectRatio="none">
+    <!-- note heads -->
+    <ellipse cx="180" cy="84" rx="9" ry="7" fill="#ead7a5" transform="rotate(-15,180,84)"/>
+    <line x1="189" y1="80" x2="189" y2="30" stroke="#ead7a5" stroke-width="2"/>
+    <ellipse cx="290" cy="72" rx="9" ry="7" fill="#ead7a5" transform="rotate(-15,290,72)"/>
+    <line x1="299" y1="68" x2="299" y2="18" stroke="#ead7a5" stroke-width="2"/>
+    <ellipse cx="400" cy="90" rx="9" ry="7" fill="#ead7a5" transform="rotate(-15,400,90)"/>
+    <line x1="409" y1="86" x2="409" y2="36" stroke="#ead7a5" stroke-width="2"/>
+    <ellipse cx="520" cy="66" rx="9" ry="7" fill="#ead7a5" transform="rotate(-15,520,66)"/>
+    <line x1="529" y1="62" x2="529" y2="12" stroke="#ead7a5" stroke-width="2"/>
+    <ellipse cx="640" cy="84" rx="9" ry="7" fill="#ead7a5" transform="rotate(-15,640,84)"/>
+    <line x1="649" y1="80" x2="649" y2="30" stroke="#ead7a5" stroke-width="2"/>
+    <!-- beam connecting 2 notes -->
+    <line x1="189" y1="30" x2="299" y2="20" stroke="#ead7a5" stroke-width="4"/>
+    <line x1="409" y1="36" x2="529" y2="14" stroke="#ead7a5" stroke-width="4"/>
+    <!-- quarter rest -->
+    <text x="750" y="80" fill="#ead7a5" font-size="32" font-family="serif">𝄽</text>
+    <!-- bar lines -->
+    <line x1="350" y1="48" x2="350" y2="108" stroke="#ead7a5" stroke-width="1.5"/>
+    <line x1="600" y1="48" x2="600" y2="108" stroke="#ead7a5" stroke-width="1.5"/>
+    <line x1="800" y1="48" x2="800" y2="108" stroke="#ead7a5" stroke-width="1.5"/>
+  </svg>
+
+  <div class="home-inner">
+    <p class="home-kicker">Roteiro Litúrgico Musical</p>
+    <h1 class="home-title">Roteiro<br><em>Litúrgico</em></h1>
+    <p class="home-date" id="homeDate"></p>
+
+    <div class="menu-grid">
+      <button class="menu-btn" onclick="goNewRepertorio()">
+        <div class="menu-icon">🎵</div>
+        <div>
+          <div class="menu-label">Novo Repertório</div>
+          <div class="menu-desc">Criar lista musical para uma celebração</div>
+        </div>
+      </button>
+      <button class="menu-btn" onclick="goScreen('historico')">
+        <div class="menu-icon">📋</div>
+        <div>
+          <div class="menu-label">Repertórios</div>
+          <div class="menu-desc">Histórico de listas salvas</div>
+        </div>
+      </button>
+      <button class="menu-btn menu-btn-wide" onclick="goScreen('eventos')">
+        <div class="menu-icon">📅</div>
+        <div>
+          <div class="menu-label">Eventos</div>
+          <div class="menu-desc">Calendário — clique em uma data para criar ou abrir um repertório</div>
+        </div>
+      </button>
+      <button class="menu-btn menu-btn-wide" onclick="exportBackup()" style="opacity:.75;">
+        <div class="menu-icon" style="font-size:16px;">⬇</div>
+        <div>
+          <div class="menu-label">Exportar Backup</div>
+          <div class="menu-desc">Baixar todos os repertórios e PDFs em um arquivo .json</div>
+        </div>
+      </button>
+      <button class="menu-btn menu-btn-wide" onclick="importBackup()" style="opacity:.75;">
+        <div class="menu-icon" style="font-size:16px;">⬆</div>
+        <div>
+          <div class="menu-label">Importar Backup</div>
+          <div class="menu-desc">Restaurar repertórios de um arquivo .json exportado anteriormente</div>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     REPERTÓRIO SCREEN
+     ══════════════════════════════ -->
+<div class="screen" id="repertorio">
+  <header>
+    <div class="subpage-header">
+      <button class="back-btn" onclick="goHome()">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Menu
+      </button>
+      <div class="subpage-title-block">
+        <div class="subpage-kicker">Roteiro Litúrgico Musical</div>
+        <div class="subpage-h1" id="repTitle">Abertura da Festa<span id="repDate" class="subpage-sub">11 de Junho</span></div>
+      </div>
+      <div class="header-btn-cluster">
+        <button class="hbtn" onclick="toggleHep()">
+          <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+          Editar
+        </button>
+        <button class="hbtn" onclick="saveRepertorio()">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          Salvar
+        </button>
+        <button class="hbtn" onclick="window.print()">
+          <svg viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+          Imprimir
+        </button>
+      </div>
+    </div>
+    <div class="hep" id="hep">
+      <div class="hep-inner">
+        <div class="hep-f"><label>Título</label><input id="hfTitle"/></div>
+        <div class="hep-f"><label>Data</label><input id="hfDate"/></div>
+        <button class="save-hep" onclick="saveHeaderInfo()">Salvar</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="rep-page">
+    <div class="topline">
+      <div class="tl-left">
+        <span class="tl-label" id="celebLabel">Celebração</span>
+        <div class="tl-edit-wrap" id="celebEditWrap">
+          <input id="celebInput" placeholder="Ex: Missa, Celebração..." />
+          <button class="save-btn" onclick="saveCeleb()" style="padding:4px 10px;font-size:10px;">OK</button>
+        </div>
+      </div>
+      <div class="tl-right">
+        <button class="tlbtn" id="celebEditBtn" onclick="toggleCelebEdit()">
+          <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+          Editar nome
+        </button>
+        <button class="tlbtn gold" onclick="addSong()">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Adicionar
+        </button>
+      </div>
+    </div>
+    <section class="repertoire" id="songList"></section>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     HISTÓRICO SCREEN
+     ══════════════════════════════ -->
+<div class="screen" id="historico">
+  <div class="subpage-header">
+    <button class="back-btn" onclick="goHome()">
+      <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Menu
+    </button>
+    <div class="subpage-title-block">
+      <div class="subpage-kicker">Histórico</div>
+      <div class="subpage-h1">Repertórios Salvos</div>
+    </div>
+  </div>
+  <div class="rep-page" style="padding-top:14px;">
+    <div class="hist-list" id="histList"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     EVENTOS SCREEN
+     ══════════════════════════════ -->
+<div class="screen" id="eventos">
+  <div class="subpage-header">
+    <button class="back-btn" onclick="goHome()">
+      <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Menu
+    </button>
+    <div class="subpage-title-block">
+      <div class="subpage-kicker">Calendário</div>
+      <div class="subpage-h1">Eventos</div>
+    </div>
+  </div>
+  <div class="rep-page">
+    <div class="cal-wrap">
+      <div class="cal-head">
+        <button class="cal-nav" onclick="calPrev()">‹</button>
+        <span id="calMonthLabel"></span>
+        <button class="cal-nav" onclick="calNext()">›</button>
+      </div>
+      <div class="cal-dow">
+        <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+    <div class="event-panel" id="eventPanel">
+      <h3 id="eventPanelTitle"></h3>
+      <div class="ep-row">
+        <div class="ep-f"><label>Nome do evento</label><input id="epName" placeholder="Ex: Missa de Pentecostes"/></div>
+        <div class="ep-btns">
+          <button class="btn-ep-cancel" onclick="closeEventPanel()">Cancelar</button>
+          <button class="btn-ep-go" onclick="goFromEvent()">Abrir Repertório →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PDF VIEWER -->
+<div class="viewer" id="viewer">
+  <div class="vbox">
+    <div class="vhead">
+      <div class="vhead-info">
+        <h3 id="vTitle"></h3>
+        <p id="vMeta"></p>
+      </div>
+      <button class="vok" onclick="closeViewer()">OK — Fechar</button>
+    </div>
+    <iframe id="pdfFrame" class="pdf-frame" title="PDF"></iframe>
+    <div id="emptyView" class="empty-view">PDF ainda não anexado a esta música.</div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════
+   GLOBAL STATE
+   ════════════════════════════════════ */
+const SK_HIST   = "rlm-historico-v1";
+const DB_NAME   = "rlm-pdfs";
+const STORE_PDF = "pdfs";
+
+const MOMENTOS_DEFAULT = [
+  "Invocação","Acolhida","Entrada","Ato Penitencial","Glória",
+  "Bíblia / Entrada","Aclamação","Ladainha","Ofertório","Santo",
+  "Cordeiro","Comunhão I","Comunhão II / Ação de Graças","Final"
+];
+
+function makeFreshSongs(){
+  return MOMENTOS_DEFAULT.map((m,i)=>({id:i+1,momento:m,titulo:""}));
+}
+
+/* current repertório being edited */
+let curSongs    = [];
+let curPdfMeta  = {};
+let curDone     = {};
+let curRepId    = null; /* null = unsaved new */
+let curOpenEd   = null;
+let curNextId   = 15;
+
+/* history array */
+let history = loadHist();
+
+/* calendar */
+let calYear, calMonth;
+const now = new Date();
+calYear  = now.getFullYear();
+calMonth = now.getMonth();
+let selectedCalDate = null;
+
+/* ════════════════════════════════════
+   HOME DATE
+   ════════════════════════════════════ */
+(function(){
+  const d = new Date();
+  const opts = {weekday:'long',day:'numeric',month:'long',year:'numeric'};
+  document.getElementById("homeDate").textContent =
+    d.toLocaleDateString("pt-BR",opts).replace(/^\w/,c=>c.toUpperCase());
+})();
+
+/* ════════════════════════════════════
+   SCREEN ROUTING
+   ════════════════════════════════════ */
+function goScreen(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+  if(id==="historico") renderHist();
+  if(id==="eventos")   renderCal();
+}
+function goHome(){ goScreen("home"); }
+
+function goNewRepertorio(){
+  curRepId   = null;
+  curSongs   = makeFreshSongs();
+  curPdfMeta = {};
+  curDone    = {};
+  curOpenEd  = null;
+  curNextId  = 15;
+  /* reset header */
+  setRepHeader("Novo Repertório","");
+  document.getElementById("celebLabel").textContent = "Celebração";
+  document.getElementById("hep").classList.remove("open");
+  goScreen("repertorio");
+  render();
+}
+
+function goFromEvent(){
+  const name = document.getElementById("epName").value.trim();
+  const dateStr = selectedCalDate ? fmtDate(selectedCalDate) : "";
+  curRepId   = null;
+  curSongs   = makeFreshSongs();
+  curPdfMeta = {};
+  curDone    = {};
+  curOpenEd  = null;
+  curNextId  = 15;
+  setRepHeader(name||"Repertório", dateStr);
+  document.getElementById("celebLabel").textContent = "Celebração";
+  document.getElementById("hep").classList.remove("open");
+  closeEventPanel();
+  goScreen("repertorio");
+  render();
+}
+
+function openRepertorio(repId){
+  const rep = history.find(r=>r.id===repId);
+  if(!rep) return;
+  curRepId   = repId;
+  curSongs   = JSON.parse(JSON.stringify(rep.songs));
+  curPdfMeta = JSON.parse(JSON.stringify(rep.pdfMeta||{}));
+  curDone    = JSON.parse(JSON.stringify(rep.done||{}));
+  curOpenEd  = null;
+  curNextId  = Math.max(...curSongs.map(s=>s.id),14)+1;
+  setRepHeader(rep.title, rep.date||"");
+  document.getElementById("celebLabel").textContent = rep.celeb||"Celebração";
+  document.getElementById("hep").classList.remove("open");
+  goScreen("repertorio");
+  render();
+}
+
+/* ════════════════════════════════════
+   HEADER INFO
+   ════════════════════════════════════ */
+function setRepHeader(title, date){
+  const node = document.getElementById("repTitle");
+  node.childNodes[0].textContent = title;
+  document.getElementById("repDate").textContent = date;
+}
+function toggleHep(){
+  const p = document.getElementById("hep");
+  p.classList.toggle("open");
+  if(p.classList.contains("open")){
+    document.getElementById("hfTitle").value = document.getElementById("repTitle").childNodes[0].textContent.trim();
+    document.getElementById("hfDate").value  = document.getElementById("repDate").textContent.trim();
+  }
+}
+function saveHeaderInfo(){
+  const t = document.getElementById("hfTitle").value.trim() || "Repertório";
+  const d = document.getElementById("hfDate").value.trim();
+  setRepHeader(t,d);
+  document.getElementById("hep").classList.remove("open");
+  scheduleAutoSave();
+}
+function toggleCelebEdit(){
+  const w = document.getElementById("celebEditWrap");
+  const showing = w.classList.toggle("open");
+  if(showing){
+    document.getElementById("celebInput").value = document.getElementById("celebLabel").textContent.trim();
+    document.getElementById("celebInput").focus();
+  }
+}
+function saveCeleb(){
+  const v = document.getElementById("celebInput").value.trim();
+  if(v) document.getElementById("celebLabel").textContent = v;
+  document.getElementById("celebEditWrap").classList.remove("open");
+  scheduleAutoSave();
+}
+
+/* ════════════════════════════════════
+   TOAST NOTIFICATION
+   ════════════════════════════════════ */
+let toastTimer=null;
+function showToast(msg,type="ok"){
+  let t=document.getElementById("toast");
+  if(!t){
+    t=document.createElement("div");
+    t.id="toast";
+    t.style.cssText="position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:9px 18px;border-radius:8px;font-size:12px;font-weight:500;z-index:999;opacity:0;transition:opacity .22s,transform .22s;pointer-events:none;border-left:3px solid var(--gold);white-space:nowrap;";
+    document.body.appendChild(t);
+  }
+  if(type==="ok") t.style.borderColor="var(--gold)";
+  if(type==="auto") t.style.borderColor="var(--green)";
+  if(type==="err") t.style.borderColor="var(--danger)";
+  t.textContent=msg;
+  t.style.opacity="1";t.style.transform="translateX(-50%) translateY(0)";
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{t.style.opacity="0";t.style.transform="translateX(-50%) translateY(10px)";},2800);
+}
+
+/* ════════════════════════════════════
+   SAVE REPERTÓRIO (manual + auto)
+   ════════════════════════════════════ */
+let autoSaveTimer=null;
+function scheduleAutoSave(){
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer=setTimeout(()=>{ persistCurrent(true); },1500);
+}
+
+function persistCurrent(auto=false){
+  if(!curRepId && curSongs.every(s=>!s.titulo)) return; /* don't auto-save empty new */
+  const title = document.getElementById("repTitle").childNodes[0].textContent.trim();
+  const date  = document.getElementById("repDate").textContent.trim();
+  const celeb = document.getElementById("celebLabel").textContent.trim();
+  const rep = {
+    id: curRepId || Date.now(),
+    title, date, celeb,
+    songs: JSON.parse(JSON.stringify(curSongs)),
+    pdfMeta: JSON.parse(JSON.stringify(curPdfMeta)),
+    done: JSON.parse(JSON.stringify(curDone)),
+    savedAt: new Date().toISOString()
+  };
+  if(curRepId){
+    const idx = history.findIndex(r=>r.id===curRepId);
+    if(idx>=0) history[idx]=rep; else history.unshift(rep);
+  } else {
+    curRepId = rep.id;
+    history.unshift(rep);
+  }
+  saveHist();
+  if(auto) showToast("💾 Salvo automaticamente","auto");
+  else showToast(`✓ "${title}" salvo!`,"ok");
+}
+
+function saveRepertorio(){
+  persistCurrent(false);
+}
+
+/* ════════════════════════════════════
+   HISTORY
+   ════════════════════════════════════ */
+function loadHist(){ try{ return JSON.parse(localStorage.getItem(SK_HIST)||"[]"); }catch{ return []; } }
+function saveHist(){ localStorage.setItem(SK_HIST, JSON.stringify(history)); }
+function renderHist(){
+  const el = document.getElementById("histList");
+  el.innerHTML="";
+  if(!history.length){
+    el.innerHTML='<p class="hist-empty">Nenhum repertório salvo ainda.</p>';
+    return;
+  }
+  history.forEach((rep,i)=>{
+    const card = document.createElement("div");
+    card.className="hist-card";
+    const d = rep.savedAt ? new Date(rep.savedAt).toLocaleDateString("pt-BR") : "";
+    card.innerHTML=`
+      <div class="hist-num">${String(i+1).padStart(2,"0")}</div>
+      <div class="hist-divider"></div>
+      <div class="hist-body">
+        <div class="hist-title">${esc(rep.title||"Repertório")}</div>
+        <div class="hist-meta">${esc(rep.date||"")}${rep.date&&d?" · ":""}${d?`Salvo em ${d}`:""}</div>
+      </div>
+      <button class="hist-del" onclick="delHist(${rep.id},event)">Excluir</button>
+    `;
+    card.addEventListener("click",()=>openRepertorio(rep.id));
+    el.appendChild(card);
+  });
+}
+function delHist(id,e){
+  e.stopPropagation();
+  if(!confirm("Excluir este repertório do histórico?"))return;
+  history = history.filter(r=>r.id!==id);
+  saveHist(); renderHist();
+}
+
+/* ════════════════════════════════════
+   SONG RENDER
+   ════════════════════════════════════ */
+function pad(n){return String(n).padStart(2,"0");}
+function render(){
+  const list = document.getElementById("songList");
+  list.innerHTML="";
+  curSongs.forEach((song,idx)=>{
+    const isDone = !!curDone[song.id];
+    const lOk   = !!curPdfMeta[pk(song.id,"letra")];
+    const cOk   = !!curPdfMeta[pk(song.id,"cifra")];
+    const row   = document.createElement("article");
+    row.className="song-row"+(curOpenEd===song.id?" editing":"")+(isDone?" done":"");
+    row.innerHTML=`
+      <div class="num-block" onclick="toggleDone(${song.id})" title="Marcar como tocada">
+        <div class="chk"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="num-val">${pad(idx+1)}</div>
+      </div>
+      <div class="song-main">
+        <span class="pill">${esc(song.momento)}</span>
+        <div class="song-title ${song.titulo?"":"empty"}">${esc(song.titulo||"nome da música")}</div>
+      </div>
+      <div class="song-tools">
+        <div class="pdf-btns">
+          <button class="btn-letra" onclick="openPdf(${song.id},'letra')">Letra</button>
+          <button class="btn-cifra" onclick="openPdf(${song.id},'cifra')">Cifra</button>
+        </div>
+        <div class="row-btns">
+          <button class="btn-edit"  onclick="toggleEdit(${song.id})">Editar</button>
+          <button class="btn-clear" onclick="clearSong(${song.id})">Limpar</button>
+        </div>
+      </div>
+      <div class="song-edit">
+        <div class="se-f"><label>Momento</label><input id="m-${song.id}" value="${escA(song.momento)}"></div>
+        <div class="se-f"><label>Nome da música</label><input id="t-${song.id}" value="${escA(song.titulo)}" placeholder="Nome da música"></div>
+        <div class="ug"><label>PDF Letra</label>
+          <input class="file-input" type="file" accept="application/pdf" onchange="attachPdf(${song.id},'letra',this.files[0])">
+          <span class="hint">${lOk?esc(curPdfMeta[pk(song.id,"letra")].name):"Nenhum PDF."}</span>
+        </div>
+        <div class="ug"><label>PDF Cifra</label>
+          <input class="file-input" type="file" accept="application/pdf" onchange="attachPdf(${song.id},'cifra',this.files[0])">
+          <span class="hint">${cOk?esc(curPdfMeta[pk(song.id,"cifra")].name):"Nenhum PDF."}</span>
+        </div>
+        <button class="save-btn" onclick="saveSong(${song.id})">Salvar</button>
+      </div>
+    `;
+    list.appendChild(row);
+  });
+}
+function toggleDone(id){ curDone[id]=!curDone[id]; render(); scheduleAutoSave(); }
+function addSong(){
+  curSongs.push({id:curNextId++,momento:"Novo momento",titulo:""});
+  curOpenEd=curSongs[curSongs.length-1].id;
+  render();
+  document.querySelector(".song-row.editing")?.scrollIntoView({behavior:"smooth",block:"center"});
+}
+function toggleEdit(id){ curOpenEd=curOpenEd===id?null:id; render(); }
+function saveSong(id){
+  const s=curSongs.find(x=>x.id===id);if(!s)return;
+  s.momento=document.getElementById(`m-${id}`).value.trim()||s.momento;
+  s.titulo =document.getElementById(`t-${id}`).value.trim();
+  curOpenEd=null; render(); scheduleAutoSave();
+}
+function clearSong(id){
+  if(!confirm("Limpar nome e PDFs desta música?"))return;
+  const s=curSongs.find(x=>x.id===id);if(s)s.titulo="";
+  delete curDone[id];
+  delete curPdfMeta[pk(id,"letra")]; delete curPdfMeta[pk(id,"cifra")];
+  delPdf(pk(id,"letra")); delPdf(pk(id,"cifra"));
+  render(); scheduleAutoSave();
+}
+function pk(id,t){return `${id}-${t}`;}
+
+/* ════════════════════════════════════
+   PDF
+   ════════════════════════════════════ */
+async function attachPdf(id,type,file){
+  if(!file)return;
+  if(file.type!=="application/pdf"){alert("Escolha um arquivo PDF.");return;}
+  const key=pk(id,type);
+  await savePdf(key,file);
+  curPdfMeta[key]={name:file.name,updated:new Date().toISOString()};
+  render(); scheduleAutoSave();
+}
+async function openPdf(id,type){
+  const s=curSongs.find(x=>x.id===id);
+  document.getElementById("vTitle").textContent=s?.titulo||s?.momento||"Música";
+  document.getElementById("vMeta").textContent=`${s?.momento||""} · ${type==="letra"?"Letra":"Cifra"}`;
+  document.getElementById("viewer").classList.add("open");
+  const blob=await getPdf(pk(id,type));
+  const frame=document.getElementById("pdfFrame");
+  const empty=document.getElementById("emptyView");
+  if(blob){
+    frame.src=URL.createObjectURL(blob);
+    frame.style.display="block"; empty.style.display="none";
+  }else{
+    frame.removeAttribute("src"); frame.style.display="none"; empty.style.display="grid";
+  }
+}
+function closeViewer(){
+  document.getElementById("viewer").classList.remove("open");
+  const f=document.getElementById("pdfFrame");
+  if(f.src&&f.src.startsWith("blob:"))URL.revokeObjectURL(f.src);
+  f.removeAttribute("src");
+}
+function openDb(){
+  return new Promise((res,rej)=>{
+    const r=indexedDB.open(DB_NAME,1);
+    r.onupgradeneeded=()=>r.result.createObjectStore(STORE_PDF);
+    r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);
+  });
+}
+async function savePdf(key,file){
+  const db=await openDb();
+  return new Promise((res,rej)=>{
+    const tx=db.transaction(STORE_PDF,"readwrite");
+    tx.objectStore(STORE_PDF).put(file,key);
+    tx.oncomplete=res;tx.onerror=()=>rej(tx.error);
+  });
+}
+async function getPdf(key){
+  const db=await openDb();
+  return new Promise((res,rej)=>{
+    const tx=db.transaction(STORE_PDF,"readonly");
+    const r=tx.objectStore(STORE_PDF).get(key);
+    r.onsuccess=()=>res(r.result||null);r.onerror=()=>rej(r.error);
+  });
+}
+async function delPdf(key){
+  const db=await openDb();
+  const tx=db.transaction(STORE_PDF,"readwrite");
+  tx.objectStore(STORE_PDF).delete(key);
+}
+
+/* ════════════════════════════════════
+   CALENDÁRIO
+   ════════════════════════════════════ */
+const MONTHS_PT=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+
+function calPrev(){ calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCal(); }
+function calNext(){ calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCal(); }
+
+function fmtDate(d){ return d.toLocaleDateString("pt-BR",{day:"numeric",month:"long",year:"numeric"}); }
+function dateKey(y,m,day){ return `${y}-${String(m+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`; }
+
+function getEventsMap(){
+  const map={};
+  history.forEach(rep=>{
+    if(rep.date) map[rep.date.trim()] = (map[rep.date.trim()]||0)+1;
+  });
+  return map;
+}
+
+function renderCal(){
+  document.getElementById("calMonthLabel").textContent=`${MONTHS_PT[calMonth]} ${calYear}`;
+  const grid=document.getElementById("calGrid");
+  grid.innerHTML="";
+  const evMap=getEventsMap();
+  const firstDay=new Date(calYear,calMonth,1).getDay();
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  const daysInPrev=new Date(calYear,calMonth,0).getDate();
+  const todayStr=dateKey(now.getFullYear(),now.getMonth(),now.getDate());
+
+  let cells=[];
+  for(let i=firstDay-1;i>=0;i--){
+    cells.push({day:daysInPrev-i,cur:false,d:new Date(calYear,calMonth-1,daysInPrev-i)});
+  }
+  for(let d=1;d<=daysInMonth;d++){
+    cells.push({day:d,cur:true,d:new Date(calYear,calMonth,d)});
+  }
+  const remaining=42-cells.length;
+  for(let d=1;d<=remaining;d++){
+    cells.push({day:d,cur:false,d:new Date(calYear,calMonth+1,d)});
+  }
+
+  cells.forEach(c=>{
+    const y=c.d.getFullYear(),m=c.d.getMonth(),day=c.d.getDate();
+    const key=dateKey(y,m,day);
+    const isToday=key===todayStr;
+    const hasEv=!!evMap[fmtDate(c.d)];
+    const div=document.createElement("div");
+    div.className="cal-day"+(c.cur?"":" other-month")+(isToday?" today":"")+(hasEv?" has-event":"");
+    div.innerHTML=`<span class="cal-day-num">${c.day}</span>${hasEv?`<span class="cal-day-label">●</span>`:""}`;
+    div.addEventListener("click",()=>onCalDayClick(c.d));
+    grid.appendChild(div);
+  });
+}
+
+function onCalDayClick(date){
+  selectedCalDate=date;
+  const panel=document.getElementById("eventPanel");
+  document.getElementById("eventPanelTitle").textContent=`Evento em ${fmtDate(date)}`;
+  /* check if existing rep matches this date */
+  const existing=history.find(r=>r.date===fmtDate(date));
+  document.getElementById("epName").value=existing?existing.title:"";
+  panel.classList.add("open");
+  panel.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function closeEventPanel(){
+  document.getElementById("eventPanel").classList.remove("open");
+  selectedCalDate=null;
+}
+
+/* ════════════════════════════════════
+   EXPORT / IMPORT BACKUP
+   ════════════════════════════════════ */
+async function exportBackup(){
+  /* collect all PDF blobs and encode as base64 */
+  const pdfStore={};
+  for(const rep of history){
+    for(const song of (rep.songs||[])){
+      for(const type of ["letra","cifra"]){
+        const key=`${song.id}-${type}`;
+        if(rep.pdfMeta&&rep.pdfMeta[key]){
+          try{
+            const blob=await getPdf(key);
+            if(blob){
+              const ab=await blob.arrayBuffer();
+              const bytes=new Uint8Array(ab);
+              let b64="";
+              for(let i=0;i<bytes.byteLength;i++) b64+=String.fromCharCode(bytes[i]);
+              pdfStore[key]={data:btoa(b64),name:rep.pdfMeta[key].name,repId:rep.id};
+            }
+          }catch(e){}
+        }
+      }
+    }
+  }
+  const backup={version:2,exportedAt:new Date().toISOString(),history,pdfStore};
+  const json=JSON.stringify(backup);
+  const blob=new Blob([json],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  const d=new Date();
+  a.href=url;
+  a.download=`roteiro-backup-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast("✓ Backup exportado com sucesso!","ok");
+}
+
+function importBackup(){
+  const input=document.createElement("input");
+  input.type="file";input.accept="application/json";
+  input.onchange=async(e)=>{
+    const file=e.target.files[0];if(!file)return;
+    try{
+      const text=await file.text();
+      const backup=JSON.parse(text);
+      if(!backup.history) throw new Error("Arquivo inválido");
+      if(!confirm(`Importar ${backup.history.length} repertório(s)? Os dados atuais serão mesclados.`)) return;
+      /* merge: add imported if id not already present */
+      let added=0;
+      for(const rep of backup.history){
+        if(!history.find(r=>r.id===rep.id)){
+          history.push(rep);added++;
+        }
+      }
+      /* restore PDFs */
+      if(backup.pdfStore){
+        for(const [key,val] of Object.entries(backup.pdfStore)){
+          try{
+            const binary=atob(val.data);
+            const bytes=new Uint8Array(binary.length);
+            for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
+            const blob=new Blob([bytes],{type:"application/pdf"});
+            const f=new File([blob],val.name,{type:"application/pdf"});
+            await savePdf(key,f);
+          }catch(e){}
+        }
+      }
+      history.sort((a,b)=>new Date(b.savedAt||0)-new Date(a.savedAt||0));
+      saveHist();
+      showToast(`✓ ${added} repertório(s) importado(s)!`,"ok");
+      if(document.getElementById("historico").classList.contains("active")) renderHist();
+    }catch(err){
+      showToast("Erro: arquivo inválido","err");
+    }
+  };
+  input.click();
+}
+
+/* ════════════════════════════════════
+   UTILS
+   ════════════════════════════════════ */
+function esc(v){return String(v||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function escA(v){return esc(v).replace(/"/g,"&quot;");}
+
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeViewer(); });
+document.getElementById("viewer").addEventListener("click",e=>{ if(e.target===e.currentTarget) closeViewer(); });
+</script>
+</body>
+</html>
