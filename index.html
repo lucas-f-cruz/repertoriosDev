@@ -22,11 +22,10 @@ body{font-family:"DM Sans",sans-serif;background:var(--paper);color:var(--ink);m
 button,input,textarea{font:inherit;cursor:pointer;}
 svg{flex-shrink:0;}
 
-/* SCREENS */
 .screen{display:none;min-height:100vh;flex-direction:column;}
 .screen.active{display:flex;}
 
-/* ── HOME ── */
+/* HOME */
 #home{background:var(--ink);position:relative;overflow:hidden;align-items:center;justify-content:center;padding:2rem 1rem 3rem;}
 .staff{position:absolute;left:0;right:0;pointer-events:none;top:50%;transform:translateY(-50%);height:110px;display:flex;flex-direction:column;justify-content:space-between;opacity:.06;}
 .staff-line{height:1px;background:#ead7a5;width:100%;}
@@ -40,7 +39,6 @@ svg{flex-shrink:0;}
 .menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%;margin-bottom:9px;}
 .menu-btn{background:rgba(255,253,248,.05);border:1px solid rgba(234,215,165,.17);border-radius:11px;padding:1.2rem .9rem;display:flex;flex-direction:column;align-items:center;gap:.55rem;color:#fff;transition:background .15s,border-color .15s,transform .13s;text-align:center;}
 .menu-btn:hover{background:rgba(234,215,165,.09);border-color:rgba(234,215,165,.38);transform:translateY(-2px);}
-.menu-btn:active{transform:translateY(0);}
 .menu-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(234,215,165,.09);border:1px solid rgba(234,215,165,.18);font-size:19px;}
 .menu-label{font-size:12px;font-weight:600;color:var(--gold-s);letter-spacing:.3px;}
 .menu-desc{font-size:10px;color:rgba(255,255,255,.38);line-height:1.4;}
@@ -49,7 +47,7 @@ svg{flex-shrink:0;}
 .menu-util .menu-btn{flex:1;padding:.9rem .7rem;opacity:.72;}
 .menu-util .menu-btn:hover{opacity:1;}
 
-/* ── SUBPAGE SHELL ── */
+/* SUBPAGE SHELL */
 .subpage-header{background:var(--ink);color:#fff;padding:11px 15px;display:flex;align-items:center;gap:9px;border-bottom:2px solid var(--gold);flex-shrink:0;}
 .back-btn{background:none;border:1px solid rgba(234,215,165,.26);border-radius:6px;color:var(--gold-s);padding:5px 9px;font-size:11px;display:flex;align-items:center;gap:4px;transition:background .12s;flex-shrink:0;}
 .back-btn:hover{background:rgba(234,215,165,.09);}
@@ -72,7 +70,7 @@ svg{flex-shrink:0;}
 .hep-f input:focus{border-color:var(--gold);}
 .save-hep{background:var(--gold);color:var(--ink);border:none;border-radius:6px;padding:6px 13px;font-size:11px;font-weight:700;}
 
-/* ── REP PAGE ── */
+/* REP PAGE */
 .rep-page{max-width:960px;width:100%;margin:0 auto;padding:10px 13px;flex:1;overflow-y:auto;}
 .topline{display:flex;align-items:center;justify-content:space-between;gap:7px;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:7px;flex-wrap:wrap;}
 .tl-left{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
@@ -87,12 +85,21 @@ svg{flex-shrink:0;}
 .tlbtn.gold{color:var(--gold);font-weight:600;}
 .tlbtn svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 
-/* ── SONG LIST ── */
+/* SONG ROW */
 .repertoire{display:flex;flex-direction:column;gap:3px;}
-.song-row{display:grid;grid-template-columns:50px minmax(0,1fr) 156px;align-items:stretch;background:var(--surface);border:1px solid var(--border);border-radius:7px;overflow:hidden;transition:border-color .14s,box-shadow .14s;}
+.song-row{
+  background:var(--surface);border:1px solid var(--border);border-radius:7px;overflow:hidden;
+  transition:border-color .14s,box-shadow .14s;
+}
 .song-row:hover{border-color:rgba(184,139,55,.3);box-shadow:0 2px 8px rgba(24,22,18,.07);}
 .song-row.done{opacity:.5;}
 .song-row.done .song-title{text-decoration:line-through;color:var(--faint);}
+.song-row.dragging{opacity:.4;border:2px dashed var(--gold);}
+.song-row.drag-over{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold-s);}
+
+/* top row: num + main + tools */
+.song-top{display:grid;grid-template-columns:50px minmax(0,1fr) auto;align-items:stretch;}
+
 .num-block{background:linear-gradient(180deg,#27241e,#151310);color:#fff;border-right:2px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px 4px;cursor:pointer;user-select:none;-webkit-user-select:none;transition:background .12s;}
 .num-block:hover{background:linear-gradient(180deg,#332f27,#1e1b15);}
 .chk{width:14px;height:14px;border:1.5px solid rgba(234,215,165,.38);border-radius:3px;display:flex;align-items:center;justify-content:center;transition:background .12s,border-color .12s;}
@@ -100,14 +107,21 @@ svg{flex-shrink:0;}
 .song-row.done .chk{background:var(--gold);border-color:var(--gold);}
 .song-row.done .chk svg{opacity:1;}
 .num-val{font-family:"Cormorant Garamond",serif;font-size:18px;line-height:1;font-weight:600;}
-.song-main{padding:7px 10px;display:flex;flex-direction:column;justify-content:center;gap:2px;min-width:0;}
-.pill{display:inline-block;border:1px solid rgba(93,110,77,.2);background:rgba(93,110,77,.07);color:#4a5c3c;border-radius:999px;padding:1px 7px;font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;width:fit-content;}
+
+.song-main{padding:6px 10px;display:flex;flex-direction:column;justify-content:center;gap:2px;min-width:0;}
+.song-top-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.pill{display:inline-block;border:1px solid rgba(93,110,77,.2);background:rgba(93,110,77,.07);color:#4a5c3c;border-radius:999px;padding:1px 7px;font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
+.tom-badge{display:inline-flex;align-items:center;gap:3px;border:1px solid rgba(184,139,55,.3);background:rgba(184,139,55,.07);color:var(--gold);border-radius:999px;padding:1px 7px;font-size:9px;font-weight:600;letter-spacing:.5px;white-space:nowrap;cursor:pointer;transition:background .12s;}
+.tom-badge:hover{background:rgba(184,139,55,.14);}
+.tom-badge.empty{color:var(--faint);border-color:var(--border-s);background:none;}
 .song-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .song-title.empty{color:var(--faint);font-style:italic;font-weight:400;}
-.song-tools{border-left:1px solid var(--border);display:grid;grid-template-rows:1fr 1fr;background:rgba(250,246,238,.5);}
-.pdf-btns,.row-btns{display:grid;grid-template-columns:1fr 1fr;}
-.pdf-btns{border-bottom:1px solid var(--border);}
-.btn-letra,.btn-cifra,.btn-edit,.btn-clear{min-height:26px;border:none;background:transparent;font-size:11px;font-weight:600;transition:background .12s,color .12s;}
+
+/* right side tools */
+.song-tools{border-left:1px solid var(--border);display:flex;flex-direction:column;}
+.tools-row{display:grid;grid-template-columns:1fr 1fr;}
+.tools-row+.tools-row{border-top:1px solid var(--border);}
+.btn-letra,.btn-cifra,.btn-edit,.btn-clear,.btn-drag{min-height:26px;border:none;background:transparent;font-size:11px;font-weight:600;transition:background .12s,color .12s;display:flex;align-items:center;justify-content:center;gap:3px;}
 .btn-letra{color:var(--green);}
 .btn-letra:hover{background:var(--green-bg);}
 .btn-cifra{color:var(--blue);border-left:1px solid var(--border);}
@@ -116,19 +130,45 @@ svg{flex-shrink:0;}
 .btn-edit:hover{background:var(--paper);color:var(--ink);}
 .btn-clear{color:rgba(155,53,37,.55);border-left:1px solid var(--border);}
 .btn-clear:hover{background:#fff0ed;color:var(--danger);}
-.song-edit{display:none;grid-column:1/-1;border-top:1px solid var(--border);background:var(--soft);padding:9px 11px;gap:6px;flex-wrap:wrap;align-items:flex-end;}
+
+/* drag handle row */
+.drag-row{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding:2px 8px;background:rgba(244,239,231,.4);}
+.drag-handle{cursor:grab;display:flex;flex-direction:column;gap:2px;padding:3px;opacity:.35;}
+.drag-handle:active{cursor:grabbing;}
+.drag-handle span{display:block;width:18px;height:1.5px;background:var(--ink);border-radius:2px;}
+.song-row:hover .drag-handle{opacity:.65;}
+.move-arrows{display:flex;gap:3px;}
+.btn-mv{background:none;border:1px solid var(--border-s);border-radius:4px;width:20px;height:18px;display:flex;align-items:center;justify-content:center;color:var(--muted);padding:0;transition:background .12s,color .12s;}
+.btn-mv:hover{background:var(--paper);color:var(--ink);}
+.btn-mv:disabled{opacity:.2;cursor:default;}
+.btn-mv svg{width:9px;height:9px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+
+/* song edit panel */
+.song-edit{display:none;border-top:1px solid var(--border);background:var(--soft);padding:9px 11px;gap:6px;flex-wrap:wrap;align-items:flex-end;}
 .song-row.editing .song-edit{display:flex;}
-.se-f{display:flex;flex-direction:column;gap:3px;flex:1;min-width:110px;}
+.se-f{display:flex;flex-direction:column;gap:3px;flex:1;min-width:100px;}
 .se-f label,.ug label{color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase;}
 .se-f input{border:1px solid var(--border-s);border-radius:6px;background:var(--surface);color:var(--ink);padding:5px 8px;outline:none;width:100%;}
-.se-f input:focus{border-color:var(--gold);}
+.se-f input:focus,.se-f input:focus{border-color:var(--gold);}
 .ug{display:flex;flex-direction:column;gap:3px;flex:1;min-width:110px;}
 .file-input{border:1px dashed var(--border-s);background:var(--surface);border-radius:6px;padding:5px 8px;color:var(--muted);font-size:10px;width:100%;}
-.hint{font-size:9px;color:var(--faint);}
+.hint{font-size:9px;color:var(--faint);margin-top:1px;}
+.hint a{color:var(--blue);text-decoration:none;}
+.hint a:hover{text-decoration:underline;}
 .save-btn{background:var(--ink);color:var(--gold-s);border:none;border-radius:6px;padding:6px 12px;font-size:11px;font-weight:600;white-space:nowrap;align-self:flex-end;}
 .save-btn:hover{background:var(--ink2);}
 
-/* ── PDF VIEWER ── */
+/* file previews strip */
+.file-strip{display:none;grid-column:1/-1;gap:5px;flex-wrap:wrap;padding:6px 11px 8px;border-top:1px solid var(--border);background:var(--soft);}
+.song-row.editing .file-strip{display:flex;}
+.file-chip{display:flex;align-items:center;gap:5px;border:1px solid var(--border-s);border-radius:6px;background:var(--surface);padding:4px 8px;font-size:10px;color:var(--muted);cursor:pointer;transition:border-color .12s;}
+.file-chip:hover{border-color:var(--blue);color:var(--blue);}
+.file-chip.img-chip{border-color:rgba(93,110,77,.25);color:var(--green);}
+.file-chip.img-chip:hover{border-color:var(--green);}
+.chip-del{background:none;border:none;color:var(--faint);font-size:12px;padding:0 2px;line-height:1;cursor:pointer;}
+.chip-del:hover{color:var(--danger);}
+
+/* PDF VIEWER */
 .viewer{display:none;position:fixed;inset:0;z-index:50;background:rgba(18,16,12,.76);align-items:center;justify-content:center;padding:12px;}
 .viewer.open{display:flex;}
 .vbox{width:100%;max-width:840px;height:min(92vh,840px);background:var(--surface);border:1px solid rgba(234,215,165,.35);border-radius:12px;box-shadow:0 28px 80px rgba(0,0,0,.35);overflow:hidden;display:flex;flex-direction:column;}
@@ -138,9 +178,10 @@ svg{flex-shrink:0;}
 .vok{background:var(--gold);color:var(--ink);border:none;border-radius:6px;padding:7px 18px;font-size:12px;font-weight:700;flex-shrink:0;transition:opacity .12s;}
 .vok:hover{opacity:.85;}
 .pdf-frame{flex:1;width:100%;border:0;background:#ebe9e3;display:block;}
+.img-frame{flex:1;width:100%;object-fit:contain;display:block;background:#ebe9e3;}
 .empty-view{flex:1;display:grid;place-items:center;color:var(--muted);font-family:"Cormorant Garamond",serif;font-size:20px;text-align:center;padding:24px;}
 
-/* ── HISTÓRICO ── */
+/* HISTÓRICO */
 .hist-list{display:flex;flex-direction:column;gap:7px;}
 .hist-empty{color:var(--faint);font-family:"Cormorant Garamond",serif;font-size:18px;text-align:center;padding:3rem;font-style:italic;}
 .hist-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:11px 13px;display:flex;align-items:center;gap:11px;cursor:pointer;transition:border-color .13s,box-shadow .13s;}
@@ -150,16 +191,14 @@ svg{flex-shrink:0;}
 .hist-body{flex:1;min-width:0;}
 .hist-title{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .hist-meta{font-size:11px;color:var(--muted);margin-top:2px;}
-.hist-actions{display:flex;gap:5px;flex-shrink:0;}
-.hist-del{background:none;border:1px solid rgba(155,53,37,.22);border-radius:5px;padding:4px 8px;color:rgba(155,53,37,.55);font-size:10px;transition:background .12s,color .12s;}
+.hist-del{background:none;border:1px solid rgba(155,53,37,.22);border-radius:5px;padding:4px 8px;color:rgba(155,53,37,.55);font-size:10px;}
 .hist-del:hover{background:#fff0ed;color:var(--danger);}
 
-/* ── CALENDÁRIO ── */
+/* CALENDÁRIO */
 .cal-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
 .cal-head{background:var(--ink);color:#fff;padding:9px 13px;display:flex;align-items:center;justify-content:space-between;}
 .cal-head span{font-family:"Cormorant Garamond",serif;font-size:17px;font-weight:600;}
-.cal-nav{background:none;border:1px solid rgba(234,215,165,.23);border-radius:5px;color:var(--gold-s);padding:4px 10px;font-size:13px;transition:background .12s;}
-.cal-nav:hover{background:rgba(234,215,165,.09);}
+.cal-nav{background:none;border:1px solid rgba(234,215,165,.23);border-radius:5px;color:var(--gold-s);padding:4px 10px;font-size:13px;}
 .cal-dow{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border);}
 .cal-dow span{text-align:center;padding:6px 2px;font-size:9px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--faint);}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);}
@@ -182,37 +221,34 @@ svg{flex-shrink:0;}
 .btn-ep-go{background:var(--ink);color:var(--gold-s);border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:600;}
 .btn-ep-cancel{background:none;border:1px solid var(--border-s);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--muted);}
 
-/* ── TOAST ── */
+/* TOM INLINE EDIT */
+.tom-inline{display:none;align-items:center;gap:4px;margin-top:2px;}
+.tom-inline.open{display:flex;}
+.tom-inline input{border:1px solid var(--gold);border-radius:5px;background:var(--surface);color:var(--ink);padding:3px 7px;outline:none;font-size:11px;width:70px;}
+.tom-inline button{background:var(--gold);color:var(--ink);border:none;border-radius:5px;padding:3px 8px;font-size:10px;font-weight:700;}
+
+/* TOAST */
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--ink2);color:#fff;border:1px solid rgba(234,215,165,.25);border-radius:8px;padding:8px 18px;font-size:12px;font-weight:500;opacity:0;transition:opacity .25s,transform .25s;z-index:999;white-space:nowrap;pointer-events:none;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-
-/* ── LOADING OVERLAY ── */
-.loading{display:none;position:fixed;inset:0;z-index:998;background:rgba(22,19,15,.55);align-items:center;justify-content:center;}
+.loading{display:none;position:fixed;inset:0;z-index:998;background:rgba(22,19,15,.5);align-items:center;justify-content:center;}
 .loading.show{display:flex;}
 .spinner{width:36px;height:36px;border:3px solid rgba(234,215,165,.2);border-top-color:var(--gold-s);border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
-/* ── RESPONSIVE ── */
 @media(max-width:600px){
-  .menu-grid{grid-template-columns:1fr;}
-  .menu-btn-wide{grid-column:auto;}
-  .song-row{grid-template-columns:46px 1fr;}
-  .song-tools{grid-column:1/-1;border-left:none;border-top:1px solid var(--border);}
+  .menu-grid{grid-template-columns:1fr;}.menu-btn-wide{grid-column:auto;}
+  .song-top{grid-template-columns:46px 1fr auto;}
   .song-title{white-space:normal;font-size:12px;}
   .num-val{font-size:15px;}
-  .cal-day{min-height:36px;padding:4px 2px;}
-  .cal-day-num{font-size:11px;}
+  .cal-day{min-height:36px;}.cal-day-num{font-size:11px;}
 }
 </style>
 </head>
 <body>
-
-<!-- LOADING -->
 <div class="loading" id="loading"><div class="spinner"></div></div>
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- ══ HOME ══ -->
+<!-- HOME -->
 <div class="screen active" id="home">
   <div class="staff" aria-hidden="true">
     <div class="staff-line"></div><div class="staff-line"></div><div class="staff-line"></div>
@@ -220,14 +256,14 @@ svg{flex-shrink:0;}
   </div>
   <div class="clef-wrap" aria-hidden="true">
     <svg xmlns="http://www.w3.org/2000/svg" width="80" height="185" viewBox="0 0 90 200" fill="none">
-      <path d="M45 10 C45 10 25 35 25 70 C25 95 38 108 50 115 C38 122 20 138 20 162 C20 182 33 196 48 196 C63 196 76 184 76 168 C76 150 63 140 50 132 C50 132 68 120 68 95 C68 72 55 52 45 38 L45 10Z" stroke="#ead7a5" stroke-width="3" stroke-linecap="round"/>
+      <path d="M45 10C45 10 25 35 25 70C25 95 38 108 50 115C38 122 20 138 20 162C20 182 33 196 48 196C63 196 76 184 76 168C76 150 63 140 50 132C50 132 68 120 68 95C68 72 55 52 45 38L45 10Z" stroke="#ead7a5" stroke-width="3" stroke-linecap="round"/>
       <circle cx="44" cy="168" r="12" stroke="#ead7a5" stroke-width="3"/>
-      <path d="M44 156 C44 156 35 148 35 138 C35 125 44 118 50 115" stroke="#ead7a5" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M44 156C44 156 35 148 35 138C35 125 44 118 50 115" stroke="#ead7a5" stroke-width="2.5" stroke-linecap="round"/>
     </svg>
   </div>
-  <div class="clef-wrap" aria-hidden="true" style="left:auto;right:clamp(8px,4vw,56px);transform:translateY(-58%) scaleX(-1);opacity:.07;">
+  <div class="clef-wrap" style="left:auto;right:clamp(8px,4vw,56px);transform:translateY(-58%) scaleX(-1);opacity:.07;" aria-hidden="true">
     <svg xmlns="http://www.w3.org/2000/svg" width="80" height="185" viewBox="0 0 90 200" fill="none">
-      <path d="M45 10 C45 10 25 35 25 70 C25 95 38 108 50 115 C38 122 20 138 20 162 C20 182 33 196 48 196 C63 196 76 184 76 168 C76 150 63 140 50 132 C50 132 68 120 68 95 C68 72 55 52 45 38 L45 10Z" stroke="#ead7a5" stroke-width="3" stroke-linecap="round"/>
+      <path d="M45 10C45 10 25 35 25 70C25 95 38 108 50 115C38 122 20 138 20 162C20 182 33 196 48 196C63 196 76 184 76 168C76 150 63 140 50 132C50 132 68 120 68 95C68 72 55 52 45 38L45 10Z" stroke="#ead7a5" stroke-width="3" stroke-linecap="round"/>
       <circle cx="44" cy="168" r="12" stroke="#ead7a5" stroke-width="3"/>
     </svg>
   </div>
@@ -279,7 +315,7 @@ svg{flex-shrink:0;}
   </div>
 </div>
 
-<!-- ══ REPERTÓRIO ══ -->
+<!-- REPERTÓRIO -->
 <div class="screen" id="repertorio">
   <header>
     <div class="subpage-header">
@@ -332,7 +368,7 @@ svg{flex-shrink:0;}
   </div>
 </div>
 
-<!-- ══ HISTÓRICO ══ -->
+<!-- HISTÓRICO -->
 <div class="screen" id="historico">
   <div class="subpage-header">
     <button class="back-btn" onclick="goHome()"><svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Menu</button>
@@ -341,12 +377,10 @@ svg{flex-shrink:0;}
       <div class="subpage-h1">Repertórios Salvos</div>
     </div>
   </div>
-  <div class="rep-page" style="padding-top:12px;">
-    <div class="hist-list" id="histList"></div>
-  </div>
+  <div class="rep-page" style="padding-top:12px;"><div class="hist-list" id="histList"></div></div>
 </div>
 
-<!-- ══ EVENTOS ══ -->
+<!-- EVENTOS -->
 <div class="screen" id="eventos">
   <div class="subpage-header">
     <button class="back-btn" onclick="goHome()"><svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Menu</button>
@@ -362,9 +396,7 @@ svg{flex-shrink:0;}
         <span id="calMonthLabel"></span>
         <button class="cal-nav" onclick="calNext()">›</button>
       </div>
-      <div class="cal-dow">
-        <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
-      </div>
+      <div class="cal-dow"><span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span></div>
       <div class="cal-grid" id="calGrid"></div>
     </div>
     <div class="event-panel" id="eventPanel">
@@ -380,134 +412,118 @@ svg{flex-shrink:0;}
   </div>
 </div>
 
-<!-- PDF VIEWER -->
+<!-- PDF / IMG VIEWER -->
 <div class="viewer" id="viewer">
   <div class="vbox">
     <div class="vhead">
       <div class="vhead-info"><h3 id="vTitle"></h3><p id="vMeta"></p></div>
       <button class="vok" onclick="closeViewer()">OK — Fechar</button>
     </div>
-    <iframe id="pdfFrame" class="pdf-frame" title="PDF"></iframe>
-    <div id="emptyView" class="empty-view">PDF ainda não anexado a esta música.</div>
+    <iframe id="pdfFrame" class="pdf-frame" title="PDF" style="display:none;"></iframe>
+    <img id="imgFrame" class="img-frame" alt="Imagem" style="display:none;"/>
+    <div id="emptyView" class="empty-view">Arquivo ainda não anexado.</div>
   </div>
 </div>
 
 <script>
-/* ═══════════════════════════════════════
-   SUPABASE CONFIG
-   ═══════════════════════════════════════ */
-const SB_URL = "https://bmwsajjaqockpfzckude.supabase.co";
-const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJtd3NhamphcW9ja3BmemNrdWRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzNTYzNjUsImV4cCI6MjA5NTkzMjM2NX0.ZE7YiPCm5ybvYwPYD63MgLsHze-2t0oq5sdvtQqBc98";
+/* ═══════════════ SUPABASE ═══════════════ */
+const SB_URL="https://bmwsajjaqockpfzckude.supabase.co";
+const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJtd3NhamphcW9ja3BmemNrdWRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzNTYzNjUsImV4cCI6MjA5NTkzMjM2NX0.ZE7YiPCm5ybvYwPYD63MgLsHze-2t0oq5sdvtQqBc98";
+const BUCKET="pdfs-repertorio";
 
-async function sbFetch(path, opts={}){
-  const res = await fetch(SB_URL + path, {
+async function sbFetch(path,opts={}){
+  const res=await fetch(SB_URL+path,{
     headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json","Prefer":"return=representation",...(opts.headers||{})},
     ...opts
   });
-  if(!res.ok){ const e=await res.text(); throw new Error(e); }
-  const txt = await res.text();
-  return txt ? JSON.parse(txt) : [];
+  if(!res.ok){const e=await res.text();throw new Error(e);}
+  const txt=await res.text();
+  return txt?JSON.parse(txt):[];
 }
 
-/* ═══════════════════════════════════════
-   INDEXEDDB — PDFs only
-   ═══════════════════════════════════════ */
-const DB_NAME="rlm-pdfs", STORE_PDF="pdfs";
-function openDb(){
-  return new Promise((res,rej)=>{
-    const r=indexedDB.open(DB_NAME,1);
-    r.onupgradeneeded=()=>r.result.createObjectStore(STORE_PDF);
-    r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);
+/* upload file to Supabase Storage, return public URL */
+async function sbUpload(path,file){
+  const res=await fetch(`${SB_URL}/storage/v1/object/${BUCKET}/${path}`,{
+    method:"POST",
+    headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":file.type,"x-upsert":"true"},
+    body:file
+  });
+  if(!res.ok){const e=await res.text();throw new Error(e);}
+  return `${SB_URL}/storage/v1/object/public/${BUCKET}/${path}`;
+}
+
+async function sbDeleteFile(path){
+  await fetch(`${SB_URL}/storage/v1/object/${BUCKET}/${path}`,{
+    method:"DELETE",
+    headers:{"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY}
   });
 }
-async function idbSave(key,file){const db=await openDb();return new Promise((res,rej)=>{const tx=db.transaction(STORE_PDF,"readwrite");tx.objectStore(STORE_PDF).put(file,key);tx.oncomplete=res;tx.onerror=()=>rej(tx.error);});}
-async function idbGet(key){const db=await openDb();return new Promise((res,rej)=>{const tx=db.transaction(STORE_PDF,"readonly");const r=tx.objectStore(STORE_PDF).get(key);r.onsuccess=()=>res(r.result||null);r.onerror=()=>rej(r.error);});}
-async function idbDel(key){const db=await openDb();const tx=db.transaction(STORE_PDF,"readwrite");tx.objectStore(STORE_PDF).delete(key);}
 
-/* ═══════════════════════════════════════
-   STATE
-   ═══════════════════════════════════════ */
+/* ═══════════════ STATE ═══════════════ */
 const MOMENTOS_DEFAULT=["Invocação","Acolhida","Entrada","Ato Penitencial","Glória","Bíblia / Entrada","Aclamação","Ladainha","Ofertório","Santo","Cordeiro","Comunhão I","Comunhão II / Ação de Graças","Final"];
-function makeFreshSongs(){return MOMENTOS_DEFAULT.map((m,i)=>({id:i+1,momento:m,titulo:""}));}
+function makeFreshSongs(){return MOMENTOS_DEFAULT.map((m,i)=>({id:i+1,momento:m,titulo:"",tom:"",files:[]}));}
 
-let history=[];           /* list of rep summaries from supabase */
+let history=[];
 let curSongs=[];
-let curPdfMeta={};
 let curDone={};
-let curRepId=null;        /* supabase row id (bigint) */
+let curRepId=null;
 let curOpenEd=null;
 let curNextId=15;
 let autoSaveTimer=null;
+let dragSrcIdx=null;
 
 const MONTHS_PT=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 const now=new Date();
-let calYear=now.getFullYear(), calMonth=now.getMonth();
-let selectedCalDate=null;
+let calYear=now.getFullYear(),calMonth=now.getMonth(),selectedCalDate=null;
 
-/* home date */
 document.getElementById("homeDate").textContent=
   now.toLocaleDateString("pt-BR",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).replace(/^\w/,c=>c.toUpperCase());
 
-/* ═══════════════════════════════════════
-   UI HELPERS
-   ═══════════════════════════════════════ */
+/* ═══════════════ UI HELPERS ═══════════════ */
 let toastTimer=null;
 function showToast(msg,type="ok"){
   const t=document.getElementById("toast");
   t.textContent=msg;
   t.style.borderColor=type==="err"?"var(--danger)":type==="auto"?"var(--green)":"var(--gold)";
-  t.classList.add("show");
-  clearTimeout(toastTimer);
+  t.classList.add("show");clearTimeout(toastTimer);
   toastTimer=setTimeout(()=>t.classList.remove("show"),2800);
 }
 function showLoading(v){document.getElementById("loading").classList.toggle("show",v);}
 
-/* ═══════════════════════════════════════
-   SCREENS
-   ═══════════════════════════════════════ */
+/* ═══════════════ SCREENS ═══════════════ */
 function goScreen(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  window.scrollTo(0,0);
-  if(id==="eventos") renderCal();
+  document.getElementById(id).classList.add("active");window.scrollTo(0,0);
+  if(id==="eventos")renderCal();
 }
 function goHome(){goScreen("home");}
-
-async function goHistorico(){
-  goScreen("historico");
-  await loadHistory();
-}
+async function goHistorico(){goScreen("historico");await loadHistory();}
 
 function goNewRepertorio(){
-  curRepId=null;curSongs=makeFreshSongs();curPdfMeta={};curDone={};curOpenEd=null;curNextId=15;
+  curRepId=null;curSongs=makeFreshSongs();curDone={};curOpenEd=null;curNextId=15;
   setRepHeader("Novo Repertório","");
   document.getElementById("celebLabel").textContent="Celebração";
   document.getElementById("hep").classList.remove("open");
   goScreen("repertorio");render();
 }
-
 async function goFromEvent(){
   const name=document.getElementById("epName").value.trim();
   const dateStr=selectedCalDate?fmtDate(selectedCalDate):"";
-  curRepId=null;curSongs=makeFreshSongs();curPdfMeta={};curDone={};curOpenEd=null;curNextId=15;
+  curRepId=null;curSongs=makeFreshSongs();curDone={};curOpenEd=null;curNextId=15;
   setRepHeader(name||"Repertório",dateStr);
   document.getElementById("celebLabel").textContent="Celebração";
   document.getElementById("hep").classList.remove("open");
-  closeEventPanel();
-  goScreen("repertorio");render();
+  closeEventPanel();goScreen("repertorio");render();
 }
-
 async function openRepertorio(id){
   showLoading(true);
   try{
     const rows=await sbFetch(`/rest/v1/repertorios?id=eq.${id}&select=*`);
-    if(!rows.length) throw new Error("não encontrado");
+    if(!rows.length)throw new Error("não encontrado");
     const rep=rows[0];
     curRepId=rep.id;
-    curSongs=rep.songs||makeFreshSongs();
-    curPdfMeta=rep.pdf_meta||{};
-    curDone=rep.done||{};
-    curOpenEd=null;
+    curSongs=(rep.songs||makeFreshSongs()).map(s=>({files:[],...s}));
+    curDone=rep.done||{};curOpenEd=null;
     curNextId=Math.max(...curSongs.map(s=>s.id),14)+1;
     setRepHeader(rep.titulo||"Repertório",rep.data_evento||"");
     document.getElementById("celebLabel").textContent=rep.celebracao||"Celebração";
@@ -517,12 +533,9 @@ async function openRepertorio(id){
   finally{showLoading(false);}
 }
 
-/* ═══════════════════════════════════════
-   HEADER
-   ═══════════════════════════════════════ */
+/* ═══════════════ HEADER ═══════════════ */
 function setRepHeader(title,date){
-  const node=document.getElementById("repTitle");
-  node.childNodes[0].textContent=title;
+  document.getElementById("repTitle").childNodes[0].textContent=title;
   document.getElementById("repDate").textContent=date;
 }
 function toggleHep(){
@@ -534,52 +547,45 @@ function toggleHep(){
 }
 function saveHeaderInfo(){
   setRepHeader(document.getElementById("hfTitle").value.trim()||"Repertório",document.getElementById("hfDate").value.trim());
-  document.getElementById("hep").classList.remove("open");
-  scheduleAutoSave();
+  document.getElementById("hep").classList.remove("open");scheduleAutoSave();
 }
 function toggleCelebEdit(){
   const w=document.getElementById("celebEditWrap");
-  if(w.classList.toggle("open")) document.getElementById("celebInput").value=document.getElementById("celebLabel").textContent.trim();
+  if(w.classList.toggle("open"))document.getElementById("celebInput").value=document.getElementById("celebLabel").textContent.trim();
 }
 function saveCeleb(){
   const v=document.getElementById("celebInput").value.trim();
-  if(v) document.getElementById("celebLabel").textContent=v;
-  document.getElementById("celebEditWrap").classList.remove("open");
-  scheduleAutoSave();
+  if(v)document.getElementById("celebLabel").textContent=v;
+  document.getElementById("celebEditWrap").classList.remove("open");scheduleAutoSave();
 }
 
-/* ═══════════════════════════════════════
-   SUPABASE SAVE / LOAD
-   ═══════════════════════════════════════ */
+/* ═══════════════ SUPABASE SAVE ═══════════════ */
 function buildPayload(){
-  return {
+  /* strip File objects before saving to JSON */
+  const songs=curSongs.map(s=>({...s,files:(s.files||[]).map(f=>({name:f.name,url:f.url,type:f.type}))}));
+  return{
     titulo:document.getElementById("repTitle").childNodes[0].textContent.trim()||"Repertório",
     data_evento:document.getElementById("repDate").textContent.trim(),
     celebracao:document.getElementById("celebLabel").textContent.trim(),
-    songs:curSongs,
-    pdf_meta:curPdfMeta,
-    done:curDone,
-    atualizado_em:new Date().toISOString()
+    songs,done:curDone,atualizado_em:new Date().toISOString()
   };
 }
-
 async function saveRepertorio(){
   showLoading(true);
   try{
     const payload=buildPayload();
     if(curRepId){
       await sbFetch(`/rest/v1/repertorios?id=eq.${curRepId}`,{method:"PATCH",body:JSON.stringify(payload)});
-    } else {
+    }else{
       const rows=await sbFetch("/rest/v1/repertorios",{method:"POST",body:JSON.stringify(payload)});
-      if(rows&&rows[0]) curRepId=rows[0].id;
+      if(rows&&rows[0])curRepId=rows[0].id;
     }
     showToast(`✓ "${payload.titulo}" salvo!`,"ok");
   }catch(e){showToast("Erro ao salvar: "+e.message,"err");}
   finally{showLoading(false);}
 }
-
 function scheduleAutoSave(){
-  if(!curSongs.some(s=>s.titulo)) return; /* não salva vazio */
+  if(!curSongs.some(s=>s.titulo))return;
   clearTimeout(autoSaveTimer);
   autoSaveTimer=setTimeout(async()=>{
     try{
@@ -587,15 +593,14 @@ function scheduleAutoSave(){
       if(curRepId){
         await sbFetch(`/rest/v1/repertorios?id=eq.${curRepId}`,{method:"PATCH",body:JSON.stringify(payload)});
         showToast("💾 Salvo automaticamente","auto");
-      } else {
+      }else{
         const rows=await sbFetch("/rest/v1/repertorios",{method:"POST",body:JSON.stringify(payload)});
-        if(rows&&rows[0]) curRepId=rows[0].id;
+        if(rows&&rows[0])curRepId=rows[0].id;
         showToast("💾 Salvo automaticamente","auto");
       }
     }catch(e){}
   },2000);
 }
-
 async function loadHistory(){
   showLoading(true);
   try{
@@ -605,109 +610,213 @@ async function loadHistory(){
   finally{showLoading(false);}
 }
 
-/* ═══════════════════════════════════════
-   RENDER SONG LIST
-   ═══════════════════════════════════════ */
+/* ═══════════════ RENDER SONGS ═══════════════ */
 function pad(n){return String(n).padStart(2,"0");}
+
 function render(){
   const list=document.getElementById("songList");list.innerHTML="";
   curSongs.forEach((song,idx)=>{
     const isDone=!!curDone[song.id];
-    const lOk=!!curPdfMeta[pk(song.id,"letra")];
-    const cOk=!!curPdfMeta[pk(song.id,"cifra")];
     const row=document.createElement("article");
     row.className="song-row"+(curOpenEd===song.id?" editing":"")+(isDone?" done":"");
+    row.draggable=true;
+    row.dataset.idx=idx;
+
+    const files=song.files||[];
+    const chipsHtml=files.map((f,fi)=>`
+      <div class="file-chip ${f.type==='image'?'img-chip':''}" onclick="openFile(${song.id},${fi})">
+        ${f.type==='image'?'🖼':'📄'} ${esc(f.name)}
+        <button class="chip-del" onclick="delFile(event,${song.id},${fi})">×</button>
+      </div>`).join("");
+
+    const tomLabel=song.tom?`Tom: ${esc(song.tom)}`:"Tom: —";
     row.innerHTML=`
-      <div class="num-block" onclick="toggleDone(${song.id})" title="Marcar como tocada">
-        <div class="chk"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="num-val">${pad(idx+1)}</div>
-      </div>
-      <div class="song-main">
-        <span class="pill">${esc(song.momento)}</span>
-        <div class="song-title ${song.titulo?"":"empty"}">${esc(song.titulo||"nome da música")}</div>
-      </div>
-      <div class="song-tools">
-        <div class="pdf-btns">
-          <button class="btn-letra" onclick="openPdf(${song.id},'letra')">Letra</button>
-          <button class="btn-cifra" onclick="openPdf(${song.id},'cifra')">Cifra</button>
+      <div class="song-top">
+        <div class="num-block" onclick="toggleDone(${song.id})" title="Marcar como tocada">
+          <div class="chk"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="num-val">${pad(idx+1)}</div>
         </div>
-        <div class="row-btns">
-          <button class="btn-edit" onclick="toggleEdit(${song.id})">Editar</button>
-          <button class="btn-clear" onclick="clearSong(${song.id})">Limpar</button>
+        <div class="song-main">
+          <div class="song-top-row">
+            <span class="pill">${esc(song.momento)}</span>
+            <span class="tom-badge ${song.tom?'':'empty'}" onclick="toggleTomEdit(${song.id},event)">${tomLabel}</span>
+          </div>
+          <div class="tom-inline" id="tom-inline-${song.id}">
+            <input id="tom-input-${song.id}" placeholder="Ex: G, Am, F" value="${escA(song.tom||'')}"/>
+            <button onclick="saveTom(${song.id})">OK</button>
+          </div>
+          <div class="song-title ${song.titulo?'':'empty'}">${esc(song.titulo||'nome da música')}</div>
+        </div>
+        <div class="song-tools">
+          <div class="tools-row">
+            <button class="btn-letra" onclick="openFileByType(${song.id},'letra')">Letra</button>
+            <button class="btn-cifra" onclick="openFileByType(${song.id},'cifra')">Cifra</button>
+          </div>
+          <div class="tools-row">
+            <button class="btn-edit" onclick="toggleEdit(${song.id})">Editar</button>
+            <button class="btn-clear" onclick="clearSong(${song.id})">Limpar</button>
+          </div>
+        </div>
+      </div>
+      <div class="drag-row">
+        <div class="drag-handle" title="Arrastar para reordenar"><span></span><span></span><span></span></div>
+        <div class="move-arrows">
+          <button class="btn-mv" onclick="moveUp(${idx})" ${idx===0?'disabled':''}>
+            <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+          </button>
+          <button class="btn-mv" onclick="moveDown(${idx})" ${idx===curSongs.length-1?'disabled':''}>
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
         </div>
       </div>
       <div class="song-edit">
         <div class="se-f"><label>Momento</label><input id="m-${song.id}" value="${escA(song.momento)}"></div>
         <div class="se-f"><label>Nome da música</label><input id="t-${song.id}" value="${escA(song.titulo)}" placeholder="Nome da música"></div>
-        <div class="ug"><label>PDF Letra</label>
-          <input class="file-input" type="file" accept="application/pdf" onchange="attachPdf(${song.id},'letra',this.files[0])">
-          <span class="hint">${lOk?esc(curPdfMeta[pk(song.id,"letra")].name):"Nenhum PDF."}</span>
-        </div>
-        <div class="ug"><label>PDF Cifra</label>
-          <input class="file-input" type="file" accept="application/pdf" onchange="attachPdf(${song.id},'cifra',this.files[0])">
-          <span class="hint">${cOk?esc(curPdfMeta[pk(song.id,"cifra")].name):"Nenhum PDF."}</span>
+        <div class="se-f"><label>Tom</label><input id="tom-edit-${song.id}" value="${escA(song.tom||'')}" placeholder="Ex: G, Am, F#"></div>
+        <div class="ug">
+          <label>Adicionar Letra / Cifra / Foto</label>
+          <input class="file-input" type="file" accept="application/pdf,image/*" multiple onchange="attachFiles(${song.id},this.files)">
+          <span class="hint">PDF ou imagem (foto de partitura, print de cifra…)</span>
         </div>
         <button class="save-btn" onclick="saveSong(${song.id})">Salvar</button>
-      </div>`;
+      </div>
+      <div class="file-strip">${chipsHtml}</div>
+    `;
+
+    /* drag events */
+    row.addEventListener("dragstart",e=>{dragSrcIdx=idx;row.classList.add("dragging");e.dataTransfer.effectAllowed="move";});
+    row.addEventListener("dragend",()=>{row.classList.remove("dragging");document.querySelectorAll(".song-row").forEach(r=>r.classList.remove("drag-over"));});
+    row.addEventListener("dragover",e=>{e.preventDefault();document.querySelectorAll(".song-row").forEach(r=>r.classList.remove("drag-over"));row.classList.add("drag-over");});
+    row.addEventListener("drop",e=>{
+      e.preventDefault();
+      if(dragSrcIdx===null||dragSrcIdx===idx)return;
+      const moved=curSongs.splice(dragSrcIdx,1)[0];curSongs.splice(idx,0,moved);dragSrcIdx=null;render();scheduleAutoSave();
+    });
+
     list.appendChild(row);
   });
 }
 
+/* ═══════════════ SONG ACTIONS ═══════════════ */
 function toggleDone(id){curDone[id]=!curDone[id];render();scheduleAutoSave();}
+
+function moveUp(idx){if(idx===0)return;[curSongs[idx-1],curSongs[idx]]=[curSongs[idx],curSongs[idx-1]];render();scheduleAutoSave();}
+function moveDown(idx){if(idx>=curSongs.length-1)return;[curSongs[idx],curSongs[idx+1]]=[curSongs[idx+1],curSongs[idx]];render();scheduleAutoSave();}
+
 function addSong(){
-  curSongs.push({id:curNextId++,momento:"Novo momento",titulo:""});
+  curSongs.push({id:curNextId++,momento:"Novo momento",titulo:"",tom:"",files:[]});
   curOpenEd=curSongs[curSongs.length-1].id;render();
   document.querySelector(".song-row.editing")?.scrollIntoView({behavior:"smooth",block:"center"});
 }
 function toggleEdit(id){curOpenEd=curOpenEd===id?null:id;render();}
+
 function saveSong(id){
   const s=curSongs.find(x=>x.id===id);if(!s)return;
   s.momento=document.getElementById(`m-${id}`).value.trim()||s.momento;
   s.titulo=document.getElementById(`t-${id}`).value.trim();
+  s.tom=document.getElementById(`tom-edit-${id}`).value.trim();
   curOpenEd=null;render();scheduleAutoSave();
 }
-function clearSong(id){
-  if(!confirm("Limpar nome e PDFs desta música?"))return;
-  const s=curSongs.find(x=>x.id===id);if(s)s.titulo="";
-  delete curDone[id];
-  delete curPdfMeta[pk(id,"letra")];delete curPdfMeta[pk(id,"cifra")];
-  idbDel(pk(id,"letra"));idbDel(pk(id,"cifra"));
-  render();scheduleAutoSave();
-}
-function pk(id,t){return `${id}-${t}`;}
 
-/* ═══════════════════════════════════════
-   PDF
-   ═══════════════════════════════════════ */
-async function attachPdf(id,type,file){
-  if(!file)return;
-  if(file.type!=="application/pdf"){showToast("Escolha um arquivo PDF.","err");return;}
-  const key=pk(id,type);
-  await idbSave(key,file);
-  curPdfMeta[key]={name:file.name,updated:new Date().toISOString()};
+function clearSong(id){
+  if(!confirm("Limpar nome, tom e arquivos desta música?"))return;
+  const s=curSongs.find(x=>x.id===id);
+  if(s){s.titulo="";s.tom="";s.files=[];}
+  delete curDone[id];
   render();scheduleAutoSave();
 }
-async function openPdf(id,type){
-  const s=curSongs.find(x=>x.id===id);
-  document.getElementById("vTitle").textContent=s?.titulo||s?.momento||"Música";
-  document.getElementById("vMeta").textContent=`${s?.momento||""} · ${type==="letra"?"Letra":"Cifra"}`;
-  document.getElementById("viewer").classList.add("open");
-  const blob=await idbGet(pk(id,type));
-  const frame=document.getElementById("pdfFrame");
+
+/* ═══════════════ TOM INLINE ═══════════════ */
+function toggleTomEdit(id,e){
+  e.stopPropagation();
+  const wrap=document.getElementById(`tom-inline-${id}`);
+  wrap.classList.toggle("open");
+  if(wrap.classList.contains("open"))document.getElementById(`tom-input-${id}`).focus();
+}
+function saveTom(id){
+  const s=curSongs.find(x=>x.id===id);if(!s)return;
+  s.tom=document.getElementById(`tom-input-${id}`).value.trim();
+  render();scheduleAutoSave();
+}
+
+/* ═══════════════ FILE ATTACH (Supabase Storage) ═══════════════ */
+async function attachFiles(id,fileList){
+  if(!fileList||!fileList.length)return;
+  const s=curSongs.find(x=>x.id===id);if(!s)return;
+  showLoading(true);
+  try{
+    for(const file of Array.from(fileList)){
+      const isImg=file.type.startsWith("image/");
+      const ext=file.name.split(".").pop();
+      const safeName=`${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const storagePath=`rep-${curRepId||"new"}/${id}/${safeName}`;
+      let url;
+      try{
+        url=await sbUpload(storagePath,file);
+      }catch(uploadErr){
+        /* fallback: create local blob URL (works only on current device) */
+        url=URL.createObjectURL(file);
+        showToast("⚠ Bucket não configurado — arquivo local apenas","err");
+      }
+      if(!s.files)s.files=[];
+      s.files.push({name:file.name,url,storagePath,type:isImg?"image":"pdf"});
+    }
+    render();scheduleAutoSave();
+    showToast("✓ Arquivo(s) adicionado(s)","ok");
+  }catch(e){showToast("Erro ao anexar: "+e.message,"err");}
+  finally{showLoading(false);}
+}
+
+async function delFile(e,id,fi){
+  e.stopPropagation();
+  if(!confirm("Remover este arquivo?"))return;
+  const s=curSongs.find(x=>x.id===id);if(!s||!s.files)return;
+  const f=s.files[fi];
+  if(f&&f.storagePath){try{await sbDeleteFile(f.storagePath);}catch(err){}}
+  s.files.splice(fi,1);render();scheduleAutoSave();
+}
+
+function openFileByType(id,type){
+  const s=curSongs.find(x=>x.id===id);if(!s)return;
+  const files=(s.files||[]).filter(f=>f.name.toLowerCase().includes(type)||f.type===type);
+  if(files.length===0){openViewerEmpty(s.titulo||s.momento,type);return;}
+  openViewerFile(s.titulo||s.momento,s.momento+" · "+type,files[0]);
+}
+function openFile(id,fi){
+  const s=curSongs.find(x=>x.id===id);if(!s)return;
+  const f=(s.files||[])[fi];if(!f)return;
+  openViewerFile(s.titulo||s.momento,f.name,f);
+}
+function openViewerFile(title,meta,f){
+  document.getElementById("vTitle").textContent=title;
+  document.getElementById("vMeta").textContent=meta;
+  const pf=document.getElementById("pdfFrame");
+  const imgf=document.getElementById("imgFrame");
   const empty=document.getElementById("emptyView");
-  if(blob){frame.src=URL.createObjectURL(blob);frame.style.display="block";empty.style.display="none";}
-  else{frame.removeAttribute("src");frame.style.display="none";empty.style.display="grid";}
+  document.getElementById("viewer").classList.add("open");
+  if(f.type==="image"){
+    pf.style.display="none";imgf.style.display="block";empty.style.display="none";
+    imgf.src=f.url;
+  }else{
+    imgf.style.display="none";pf.style.display="block";empty.style.display="none";
+    pf.src=f.url;
+  }
+}
+function openViewerEmpty(title,type){
+  document.getElementById("vTitle").textContent=title;
+  document.getElementById("vMeta").textContent=type;
+  document.getElementById("pdfFrame").style.display="none";
+  document.getElementById("imgFrame").style.display="none";
+  document.getElementById("emptyView").style.display="grid";
+  document.getElementById("viewer").classList.add("open");
 }
 function closeViewer(){
   document.getElementById("viewer").classList.remove("open");
-  const f=document.getElementById("pdfFrame");
-  if(f.src&&f.src.startsWith("blob:"))URL.revokeObjectURL(f.src);
-  f.removeAttribute("src");
+  document.getElementById("pdfFrame").removeAttribute("src");
+  document.getElementById("imgFrame").removeAttribute("src");
 }
 
-/* ═══════════════════════════════════════
-   HISTÓRICO RENDER
-   ═══════════════════════════════════════ */
+/* ═══════════════ HISTÓRICO ═══════════════ */
 function renderHist(){
   const el=document.getElementById("histList");el.innerHTML="";
   if(!history.length){el.innerHTML='<p class="hist-empty">Nenhum repertório salvo ainda.</p>';return;}
@@ -721,9 +830,7 @@ function renderHist(){
         <div class="hist-title">${esc(rep.titulo||"Repertório")}</div>
         <div class="hist-meta">${esc(rep.data_evento||"")}${rep.data_evento&&d?" · ":""}${d?"Salvo "+d:""}</div>
       </div>
-      <div class="hist-actions">
-        <button class="hist-del" onclick="delHist(${rep.id},event)">Excluir</button>
-      </div>`;
+      <button class="hist-del" onclick="delHist(${rep.id},event)">Excluir</button>`;
     card.addEventListener("click",()=>openRepertorio(rep.id));
     el.appendChild(card);
   });
@@ -740,81 +847,48 @@ async function delHist(id,e){
   finally{showLoading(false);}
 }
 
-/* ═══════════════════════════════════════
-   CALENDÁRIO
-   ═══════════════════════════════════════ */
+/* ═══════════════ CALENDÁRIO ═══════════════ */
 function fmtDate(d){return d.toLocaleDateString("pt-BR",{day:"numeric",month:"long",year:"numeric"});}
 function calPrev(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCal();}
 function calNext(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCal();}
-
 async function renderCal(){
   document.getElementById("calMonthLabel").textContent=`${MONTHS_PT[calMonth]} ${calYear}`;
-  /* load events for this month from supabase */
   let evDates=new Set();
-  try{
-    const rows=await sbFetch("/rest/v1/repertorios?select=data_evento&data_evento=not.is.null");
-    rows.forEach(r=>{ if(r.data_evento) evDates.add(r.data_evento); });
-  }catch(e){}
+  try{const rows=await sbFetch("/rest/v1/repertorios?select=data_evento");rows.forEach(r=>{if(r.data_evento)evDates.add(r.data_evento);});}catch(e){}
   const grid=document.getElementById("calGrid");grid.innerHTML="";
   const firstDay=new Date(calYear,calMonth,1).getDay();
   const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
   const daysInPrev=new Date(calYear,calMonth,0).getDate();
-  const todayStr=`${now.getDate()} de ${MONTHS_PT[now.getMonth()].toLowerCase()} de ${now.getFullYear()}`;
+  const todayStr=fmtDate(now);
   let cells=[];
-  for(let i=firstDay-1;i>=0;i--) cells.push({day:daysInPrev-i,cur:false,d:new Date(calYear,calMonth-1,daysInPrev-i)});
-  for(let d=1;d<=daysInMonth;d++) cells.push({day:d,cur:true,d:new Date(calYear,calMonth,d)});
-  while(cells.length<42) cells.push({day:cells.length-firstDay-daysInMonth+1,cur:false,d:new Date(calYear,calMonth+1,cells.length-firstDay-daysInMonth+1)});
+  for(let i=firstDay-1;i>=0;i--)cells.push({day:daysInPrev-i,cur:false,d:new Date(calYear,calMonth-1,daysInPrev-i)});
+  for(let d=1;d<=daysInMonth;d++)cells.push({day:d,cur:true,d:new Date(calYear,calMonth,d)});
+  while(cells.length<42)cells.push({day:cells.length-firstDay-daysInMonth+1,cur:false,d:new Date(calYear,calMonth+1,cells.length-firstDay-daysInMonth+1)});
   cells.forEach(c=>{
     const label=fmtDate(c.d);
-    const isToday=label===todayStr;
-    const hasEv=evDates.has(label);
     const div=document.createElement("div");
-    div.className="cal-day"+(c.cur?"":" other-month")+(isToday?" today":"")+(hasEv?" has-event":"");
+    div.className="cal-day"+(c.cur?"":" other-month")+(label===todayStr?" today":"")+(evDates.has(label)?" has-event":"");
     div.innerHTML=`<span class="cal-day-num">${c.day}</span>`;
     div.addEventListener("click",()=>onCalDayClick(c.d));
     grid.appendChild(div);
   });
 }
-
 function onCalDayClick(date){
   selectedCalDate=date;
-  const panel=document.getElementById("eventPanel");
   document.getElementById("eventPanelTitle").textContent=`Evento em ${fmtDate(date)}`;
   document.getElementById("epName").value="";
+  const panel=document.getElementById("eventPanel");
   panel.classList.add("open");
   panel.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 function closeEventPanel(){document.getElementById("eventPanel").classList.remove("open");selectedCalDate=null;}
 
-/* ═══════════════════════════════════════
-   EXPORT / IMPORT
-   ═══════════════════════════════════════ */
+/* ═══════════════ EXPORT / IMPORT ═══════════════ */
 async function exportBackup(){
   showLoading(true);
   try{
     const rows=await sbFetch("/rest/v1/repertorios?select=*&order=atualizado_em.desc");
-    /* embed PDFs as base64 */
-    const pdfStore={};
-    for(const rep of rows){
-      for(const song of (rep.songs||[])){
-        for(const type of ["letra","cifra"]){
-          const key=`${song.id}-${type}`;
-          if(rep.pdf_meta&&rep.pdf_meta[key]){
-            try{
-              const blob=await idbGet(key);
-              if(blob){
-                const ab=await blob.arrayBuffer();
-                const bytes=new Uint8Array(ab);
-                let b64="";for(let i=0;i<bytes.byteLength;i++) b64+=String.fromCharCode(bytes[i]);
-                pdfStore[key]={data:btoa(b64),name:rep.pdf_meta[key].name};
-              }
-            }catch(e){}
-          }
-        }
-      }
-    }
-    const backup={version:3,exportedAt:new Date().toISOString(),repertorios:rows,pdfStore};
-    const blob=new Blob([JSON.stringify(backup)],{type:"application/json"});
+    const blob=new Blob([JSON.stringify({version:4,exportedAt:new Date().toISOString(),repertorios:rows})],{type:"application/json"});
     const url=URL.createObjectURL(blob);
     const a=document.createElement("a");
     const d=new Date();
@@ -824,44 +898,23 @@ async function exportBackup(){
   }catch(e){showToast("Erro ao exportar","err");}
   finally{showLoading(false);}
 }
-
 function importBackup(){
   const input=document.createElement("input");input.type="file";input.accept="application/json";
   input.onchange=async(e)=>{
     const file=e.target.files[0];if(!file)return;
     showLoading(true);
     try{
-      const text=await file.text();
-      const backup=JSON.parse(text);
-      const list=backup.repertorios||backup.history||[];
-      if(!list.length) throw new Error("Arquivo sem repertórios");
-      if(!confirm(`Importar ${list.length} repertório(s) para o Supabase?`)){showLoading(false);return;}
+      const backup=JSON.parse(await file.text());
+      const list=backup.repertorios||[];
+      if(!list.length)throw new Error("Arquivo sem repertórios");
+      if(!confirm(`Importar ${list.length} repertório(s)?`)){showLoading(false);return;}
       let added=0;
       for(const rep of list){
         try{
-          /* map old format if needed */
-          const payload={
-            titulo:rep.titulo||rep.title||"Repertório",
-            data_evento:rep.data_evento||rep.date||"",
-            celebracao:rep.celebracao||rep.celeb||"Celebração",
-            songs:rep.songs||[],
-            pdf_meta:rep.pdf_meta||rep.pdfMeta||{},
-            done:rep.done||{}
-          };
+          const payload={titulo:rep.titulo||"Repertório",data_evento:rep.data_evento||"",celebracao:rep.celebracao||"Celebração",songs:rep.songs||[],done:rep.done||{}};
           await sbFetch("/rest/v1/repertorios",{method:"POST",body:JSON.stringify(payload),headers:{"Prefer":"return=minimal"}});
           added++;
         }catch(err){}
-      }
-      /* restore PDFs */
-      if(backup.pdfStore){
-        for(const [key,val] of Object.entries(backup.pdfStore)){
-          try{
-            const binary=atob(val.data);const bytes=new Uint8Array(binary.length);
-            for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
-            const blob=new Blob([bytes],{type:"application/pdf"});
-            await idbSave(key,new File([blob],val.name,{type:"application/pdf"}));
-          }catch(e){}
-        }
       }
       showToast(`✓ ${added} repertório(s) importado(s)!`,"ok");
     }catch(err){showToast("Arquivo inválido","err");}
@@ -870,16 +923,12 @@ function importBackup(){
   input.click();
 }
 
-/* ═══════════════════════════════════════
-   UTILS
-   ═══════════════════════════════════════ */
+/* ═══════════════ UTILS ═══════════════ */
 function esc(v){return String(v||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 function escA(v){return esc(v).replace(/"/g,"&quot;");}
 
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeViewer();});
 document.getElementById("viewer").addEventListener("click",e=>{if(e.target===e.currentTarget)closeViewer();});
-/* init calendario quando abre a tela */
-document.querySelectorAll(".back-btn").forEach(b=>{});
 </script>
 </body>
 </html>
