@@ -1007,6 +1007,33 @@
       color: var(--danger);
     }
 
+    .ftype-opt {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 10px;
+      color: var(--muted);
+      cursor: pointer;
+      border: 1px solid var(--border-s);
+      border-radius: 5px;
+      padding: 3px 7px;
+      transition: background .12s, border-color .12s, color .12s;
+    }
+
+    .ftype-opt:has(input:checked) {
+      background: var(--ink);
+      color: var(--gold-s);
+      border-color: var(--ink);
+    }
+
+    .ftype-opt input {
+      display: none;
+    }
+
+    .chip-del:hover {
+      color: var(--danger);
+    }
+
     /* PDF VIEWER */
     .viewer {
       display: none;
@@ -2178,11 +2205,18 @@
         row.dataset.idx = idx;
 
         const files = song.files || [];
-        const chipsHtml = files.map((f, fi) => `
-      <div class="file-chip ${f.type === 'image' ? 'img-chip' : ''}" onclick="openFile(${song.id},${fi})">
-        ${f.type === 'image' ? '🖼' : '📄'} ${esc(f.name)}
-        <button class="chip-del" onclick="delFile(event,${song.id},${fi})">×</button>
-      </div>`).join("");
+        const tagLabel = { letra: 'Letra', cifra: 'Cifra', geral: '', image: 'Foto' };
+        const tagColor = { letra: 'color:var(--green)', cifra: 'color:var(--blue)', geral: 'color:var(--muted)', image: 'color:var(--green)' };
+        const chipsHtml = files.map((f, fi) => {
+          const tag = f.fileTag || f.type || '';
+          const icon = f.type === 'image' ? '🖼' : '📄';
+          const lbl = tagLabel[tag] || '';
+          const clr = tagColor[tag] || '';
+          return `<div class="file-chip ${f.type === 'image' ? 'img-chip' : ''}" data-sid="${song.id}" data-fi="${fi}">
+        ${icon} ${esc(f.name)}${lbl ? ` <span style="font-size:9px;font-weight:700;${clr};margin-left:2px;">[${lbl}]</span>` : ''}
+        <button class="chip-del" data-sid="${song.id}" data-fi="${fi}">×</button>
+      </div>`;
+        }).join("");
 
         const tomLabel = song.tom ? `Tom: ${esc(song.tom)}` : "Tom: —";
         row.innerHTML = `
@@ -2228,10 +2262,16 @@
         <div class="se-f"><label>Momento</label><input id="m-${song.id}" value="${escA(song.momento)}"></div>
         <div class="se-f"><label>Nome da música</label><input id="t-${song.id}" value="${escA(song.titulo)}" placeholder="Nome da música"></div>
         <div class="se-f"><label>Tom</label><input id="tom-edit-${song.id}" value="${escA(song.tom || '')}" placeholder="Ex: G, Am, F#"></div>
-        <div class="ug">
-          <label>Adicionar Letra / Cifra / Foto</label>
-          <input class="file-input" type="file" accept="application/pdf,image/*" multiple onchange="attachFiles(${song.id},this.files)">
-          <span class="hint">PDF ou imagem (foto de partitura, print de cifra…)</span>
+        <div class="ug" style="min-width:100%;">
+          <label>Adicionar arquivo</label>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:4px;">
+            <span style="font-size:10px;color:var(--muted);">Tipo:</span>
+            <label class="ftype-opt"><input type="radio" name="ftype-${song.id}" value="letra" checked> <span>Letra</span></label>
+            <label class="ftype-opt"><input type="radio" name="ftype-${song.id}" value="cifra"> <span>Cifra</span></label>
+            <label class="ftype-opt"><input type="radio" name="ftype-${song.id}" value="geral"> <span>Geral</span></label>
+          </div>
+          <input class="file-input" type="file" accept="application/pdf,image/*" multiple data-songid="${song.id}" onchange="handleFileInput(this)">
+          <span class="hint">PDF ou imagem — marque o tipo antes de escolher o arquivo</span>
         </div>
         <button class="save-btn" onclick="saveSong(${song.id})">Salvar</button>
       </div>
@@ -2295,26 +2335,44 @@
     }
 
     /* ═══════════════ FILE ATTACH (Supabase Storage) ═══════════════ */
-    async function attachFiles(id, fileList) {
+    async function ensureRepId() {
+      if (curRepId) return true;
+      try {
+        const payload = buildPayload();
+        const rows = await sbFetch("/rest/v1/repertorios", { method: "POST", body: JSON.stringify(payload) });
+        if (rows && rows[0]) { curRepId = rows[0].id; return true; }
+      } catch (e) { showToast("Erro ao criar repertório: " + e.message, "err"); }
+      return false;
+    }
+
+    function handleFileInput(input) {
+      const songId = parseInt(input.dataset.songid);
+      const checked = input.closest(".song-edit").querySelector(`input[name="ftype-${songId}"]:checked`);
+      const fileTag = checked ? checked.value : "geral";
+      attachFiles(songId, input.files, fileTag);
+    }
+
+    async function attachFiles(id, fileList, fileTag = "geral") {
       if (!fileList || !fileList.length) return;
       const s = curSongs.find(x => x.id === id); if (!s) return;
       showLoading(true);
       try {
+        const ok = await ensureRepId();
+        if (!ok) { showLoading(false); return; }
         for (const file of Array.from(fileList)) {
           const isImg = file.type.startsWith("image/");
           const ext = file.name.split(".").pop();
           const safeName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-          const storagePath = `rep-${curRepId || "new"}/${id}/${safeName}`;
+          const storagePath = `rep-${curRepId}/${id}/${safeName}`;
           let url;
           try {
             url = await sbUpload(storagePath, file);
           } catch (uploadErr) {
-            /* fallback: create local blob URL (works only on current device) */
-            url = URL.createObjectURL(file);
-            showToast("⚠ Bucket não configurado — arquivo local apenas", "err");
+            showToast("⚠ Erro no upload: " + uploadErr.message, "err");
+            continue;
           }
           if (!s.files) s.files = [];
-          s.files.push({ name: file.name, url, storagePath, type: isImg ? "image" : "pdf" });
+          s.files.push({ name: file.name, url, storagePath, type: isImg ? "image" : "pdf", fileTag: isImg ? "image" : fileTag });
         }
         render(); scheduleAutoSave();
         showToast("✓ Arquivo(s) adicionado(s)", "ok");
@@ -2333,9 +2391,13 @@
 
     function openFileByType(id, type) {
       const s = curSongs.find(x => x.id === id); if (!s) return;
-      const files = (s.files || []).filter(f => f.name.toLowerCase().includes(type) || f.type === type);
-      if (files.length === 0) { openViewerEmpty(s.titulo || s.momento, type); return; }
-      openViewerFile(s.titulo || s.momento, s.momento + " · " + type, files[0]);
+      /* match by fileTag first, then fallback to filename */
+      let files = (s.files || []).filter(f => f.fileTag === type);
+      if (!files.length) files = (s.files || []).filter(f => f.name.toLowerCase().includes(type));
+      /* if still empty and there's only 1 file total, open it */
+      if (!files.length && (s.files || []).length === 1) files = s.files;
+      if (!files.length) { openViewerEmpty(s.titulo || s.momento, type); return; }
+      openViewerFile(s.titulo || s.momento, s.momento + " · " + (type === "letra" ? "Letra" : "Cifra"), files[0]);
     }
     function openFile(id, fi) {
       const s = curSongs.find(x => x.id === id); if (!s) return;
@@ -2569,6 +2631,26 @@
     function escA(v) { return esc(v).replace(/"/g, "&quot;"); }
 
     document.addEventListener("keydown", e => { if (e.key === "Escape") closeViewer(); });
+
+    /* Event delegation for file chips — avoids inline onclick with filename quotes */
+    document.getElementById("songList").addEventListener("click", e => {
+      /* chip open */
+      const chip = e.target.closest(".file-chip");
+      if (chip && !e.target.classList.contains("chip-del")) {
+        const sid = parseInt(chip.dataset.sid);
+        const fi = parseInt(chip.dataset.fi);
+        openFile(sid, fi);
+        return;
+      }
+      /* chip delete */
+      const del = e.target.closest(".chip-del");
+      if (del) {
+        const sid = parseInt(del.dataset.sid);
+        const fi = parseInt(del.dataset.fi);
+        delFile(e, sid, fi);
+        return;
+      }
+    });
     document.getElementById("viewer").addEventListener("click", e => { if (e.target === e.currentTarget) closeViewer(); });
   </script>
 </body>
