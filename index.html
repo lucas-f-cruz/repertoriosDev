@@ -738,6 +738,62 @@
       font-weight: 400;
     }
 
+    .vocal-line {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .vocal-line strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* row color theming */
+    .song-row.row-color .pill {
+      background: var(--row-bg);
+      border-color: var(--row-border);
+      color: var(--row-text);
+    }
+
+    .song-row.row-color .num-block {
+      border-right-color: var(--row-border);
+    }
+
+    .row-color-picker {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .rcp-swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform .12s, border-color .12s;
+      flex-shrink: 0;
+    }
+
+    .rcp-swatch:hover {
+      transform: scale(1.2);
+    }
+
+    .rcp-swatch.rcp-sel {
+      border-color: var(--ink);
+      transform: scale(1.22);
+    }
+
+    .rcp-clear {
+      background: none !important;
+      border: 1.5px dashed var(--border-s) !important;
+    }
+
     /* right side tools */
     .song-tools {
       border-left: 1px solid var(--border);
@@ -2022,7 +2078,7 @@
 
     /* ═══════════════ STATE ═══════════════ */
     const MOMENTOS_DEFAULT = ["Invocação", "Acolhida", "Entrada", "Ato Penitencial", "Glória", "Bíblia / Entrada", "Aclamação", "Ladainha", "Ofertório", "Santo", "Cordeiro", "Comunhão I", "Comunhão II / Ação de Graças", "Final"];
-    function makeFreshSongs() { return MOMENTOS_DEFAULT.map((m, i) => ({ id: i + 1, momento: m, titulo: "", tom: "", files: [] })); }
+    function makeFreshSongs() { return MOMENTOS_DEFAULT.map((m, i) => ({ id: i + 1, momento: m, titulo: "", tom: "", vocais: "", cor: "", files: [] })); }
 
     let history = [];
     let curSongs = [];
@@ -2075,7 +2131,7 @@
         if (!rows.length) throw new Error("não encontrado");
         const rep = rows[0];
         curRepId = rep.id;
-        curSongs = (rep.songs || makeFreshSongs()).map(s => ({ files: [], ...s }));
+        curSongs = (rep.songs || makeFreshSongs()).map(s => ({ files: [], vocais: "", cor: "", ...s }));
         curCor = rep.cor || "";
         curDone = rep.done || {}; curOpenEd = null;
         curNextId = Math.max(...curSongs.map(s => s.id), 14) + 1;
@@ -2224,7 +2280,19 @@
       curSongs.forEach((song, idx) => {
         const isDone = !!curDone[song.id];
         const row = document.createElement("article");
-        row.className = "song-row" + (curOpenEd === song.id ? " editing" : "") + (isDone ? " done" : "");
+        const rowColor = song.cor || "";
+        row.className = "song-row" + (curOpenEd === song.id ? " editing" : "") + (isDone ? " done" : "") + (rowColor ? " row-color" : "");
+        if (rowColor) {
+          row.style.setProperty("--row-bg", rowColor + "22");
+          row.style.setProperty("--row-border", rowColor + "88");
+          row.style.setProperty("--row-text", rowColor);
+          row.style.borderLeft = `3px solid ${rowColor}`;
+        } else {
+          row.style.removeProperty("--row-bg");
+          row.style.removeProperty("--row-border");
+          row.style.removeProperty("--row-text");
+          row.style.borderLeft = "";
+        }
         row.draggable = true;
         row.dataset.idx = idx;
 
@@ -2259,6 +2327,7 @@
             <button onclick="saveTom(${song.id})">OK</button>
           </div>
           <div class="song-title ${song.titulo ? '' : 'empty'}">${esc(song.titulo || 'nome da música')}</div>
+          ${song.vocais ? `<div class="vocal-line"><strong>Vocais:</strong> ${esc(song.vocais)}</div>` : ''}
         </div>
         <div class="song-tools">
           <div class="tools-row">
@@ -2286,6 +2355,21 @@
         <div class="se-f"><label>Momento</label><input id="m-${song.id}" value="${escA(song.momento)}"></div>
         <div class="se-f"><label>Nome da música</label><input id="t-${song.id}" value="${escA(song.titulo)}" placeholder="Nome da música"></div>
         <div class="se-f"><label>Tom</label><input id="tom-edit-${song.id}" value="${escA(song.tom || '')}" placeholder="Ex: G, Am, F#"></div>
+        <div class="se-f" style="min-width:200px;flex:2;"><label>Vocais</label><input id="voc-${song.id}" value="${escA(song.vocais || '')}" placeholder="Ex: Ana, Pedro, Maria"></div>
+        <div class="se-f" style="min-width:180px;">
+          <label>Cor da linha</label>
+          <div class="row-color-picker">
+            <div class="rcp-swatch rcp-clear ${!song.cor ? 'rcp-sel' : ''}" data-id="${song.id}" data-cor="" onclick="pickRowColor(this,${song.id},'')"></div>
+            <div class="rcp-swatch ${song.cor === "#e05252" ? 'rcp-sel' : ''}" style="background:#e05252;" data-id="${song.id}" data-cor="#e05252" onclick="pickRowColor(this,${song.id},'#e05252')"></div>
+            <div class="rcp-swatch ${song.cor === "#e07c32" ? 'rcp-sel' : ''}" style="background:#e07c32;" data-id="${song.id}" data-cor="#e07c32" onclick="pickRowColor(this,${song.id},'#e07c32')"></div>
+            <div class="rcp-swatch ${song.cor === "#c9a020" ? 'rcp-sel' : ''}" style="background:#c9a020;" data-id="${song.id}" data-cor="#c9a020" onclick="pickRowColor(this,${song.id},'#c9a020')"></div>
+            <div class="rcp-swatch ${song.cor === "#4a9e60" ? 'rcp-sel' : ''}" style="background:#4a9e60;" data-id="${song.id}" data-cor="#4a9e60" onclick="pickRowColor(this,${song.id},'#4a9e60')"></div>
+            <div class="rcp-swatch ${song.cor === "#2a6baa" ? 'rcp-sel' : ''}" style="background:#2a6baa;" data-id="${song.id}" data-cor="#2a6baa" onclick="pickRowColor(this,${song.id},'#2a6baa')"></div>
+            <div class="rcp-swatch ${song.cor === "#7a4aaa" ? 'rcp-sel' : ''}" style="background:#7a4aaa;" data-id="${song.id}" data-cor="#7a4aaa" onclick="pickRowColor(this,${song.id},'#7a4aaa')"></div>
+            <div class="rcp-swatch ${song.cor === "#c04a80" ? 'rcp-sel' : ''}" style="background:#c04a80;" data-id="${song.id}" data-cor="#c04a80" onclick="pickRowColor(this,${song.id},'#c04a80')"></div>
+            <div class="rcp-swatch ${song.cor === "#3a9eaa" ? 'rcp-sel' : ''}" style="background:#3a9eaa;" data-id="${song.id}" data-cor="#3a9eaa" onclick="pickRowColor(this,${song.id},'#3a9eaa')"></div>
+          </div>
+        </div>
         <div class="ug" style="min-width:100%;">
           <label>Adicionar arquivo</label>
           <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:4px;">
@@ -2334,13 +2418,23 @@
       s.momento = document.getElementById(`m-${id}`).value.trim() || s.momento;
       s.titulo = document.getElementById(`t-${id}`).value.trim();
       s.tom = document.getElementById(`tom-edit-${id}`).value.trim();
+      s.vocais = document.getElementById(`voc-${id}`)?.value.trim() || "";
       curOpenEd = null; render(); scheduleAutoSave();
+    }
+
+    function pickRowColor(el, id, cor) {
+      const s = curSongs.find(x => x.id === id); if (!s) return;
+      s.cor = cor;
+      /* update swatches visually without full re-render */
+      el.closest(".row-color-picker").querySelectorAll(".rcp-swatch").forEach(sw => sw.classList.remove("rcp-sel"));
+      el.classList.add("rcp-sel");
+      render(); scheduleAutoSave();
     }
 
     function clearSong(id) {
       if (!confirm("Limpar nome, tom e arquivos desta música?")) return;
       const s = curSongs.find(x => x.id === id);
-      if (s) { s.titulo = ""; s.tom = ""; s.files = []; }
+      if (s) { s.titulo = ""; s.tom = ""; s.vocais = ""; s.cor = ""; s.files = []; }
       delete curDone[id];
       render(); scheduleAutoSave();
     }
