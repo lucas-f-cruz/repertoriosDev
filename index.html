@@ -1086,6 +1086,30 @@
       color: var(--danger);
     }
 
+    .btn-del-row {
+      color: rgba(155, 53, 37, .7);
+      border-left: 1px solid var(--border);
+      background: none;
+      min-height: 26px;
+      font-size: 11px;
+      font-weight: 600;
+      border-top: none;
+      border-right: none;
+      border-bottom: none;
+      cursor: pointer;
+      transition: background .12s, color .12s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 0 8px;
+    }
+
+    .btn-del-row:hover {
+      background: #fff0ed;
+      color: var(--danger);
+    }
+
     /* drag handle row */
     .drag-row {
       display: flex;
@@ -2605,9 +2629,12 @@
             <button class="btn-letra" onclick="openFileByType(${song.id},'letra')">Letra</button>
             <button class="btn-cifra" onclick="openFileByType(${song.id},'cifra')">Cifra</button>
           </div>
-          <div class="tools-row">
+          <div class="tools-row" style="grid-template-columns:1fr 1fr 34px;">
             <button class="btn-edit" onclick="toggleEdit(${song.id})">Editar</button>
             <button class="btn-clear" onclick="clearSong(${song.id})">Limpar</button>
+            <button class="btn-del-row" onclick="deleteSong(${song.id})" title="Excluir esta música da lista">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
           </div>
         </div>
       </div>
@@ -2707,6 +2734,13 @@
       const s = curSongs.find(x => x.id === id);
       if (s) { s.titulo = ""; s.tom = ""; s.vocais = ""; s.cor = ""; s.files = []; }
       delete curDone[id];
+      render(); scheduleAutoSave();
+    }
+
+    function deleteSong(id) {
+      if (!confirm("Excluir esta música da lista?")) return;
+      curSongs = curSongs.filter(s => s.id !== id);
+      if (curOpenEd === id) curOpenEd = null;
       render(); scheduleAutoSave();
     }
 
