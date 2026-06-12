@@ -832,9 +832,9 @@
     }
 
     .num-block {
-      background: linear-gradient(180deg, #27241e, #151310);
-      color: #fff;
-      border-right: 2px solid var(--gold);
+      background: var(--row-num-bg, #f0ede8);
+      color: var(--row-num-text, var(--ink));
+      border-right: 2px solid var(--row-num-border, var(--border-s));
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -844,17 +844,17 @@
       cursor: pointer;
       user-select: none;
       -webkit-user-select: none;
-      transition: background .12s;
+      transition: filter .12s;
     }
 
     .num-block:hover {
-      background: linear-gradient(180deg, #332f27, #1e1b15);
+      filter: brightness(.9);
     }
 
     .chk {
       width: 14px;
       height: 14px;
-      border: 1.5px solid rgba(234, 215, 165, .38);
+      border: 1.5px solid var(--row-num-chk, rgba(0, 0, 0, .22));
       border-radius: 3px;
       display: flex;
       align-items: center;
@@ -865,7 +865,7 @@
     .chk svg {
       width: 9px;
       height: 9px;
-      stroke: var(--gold-s);
+      stroke: var(--row-num-text, var(--ink));
       opacity: 0;
       transition: opacity .12s;
       fill: none;
@@ -875,8 +875,8 @@
     }
 
     .song-row.done .chk {
-      background: var(--gold);
-      border-color: var(--gold);
+      background: var(--row-num-text, var(--ink));
+      border-color: var(--row-num-text, var(--ink));
     }
 
     .song-row.done .chk svg {
@@ -891,7 +891,7 @@
     }
 
     .song-main {
-      padding: 6px 10px;
+      padding: 7px 10px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -899,52 +899,18 @@
       min-width: 0;
     }
 
-    .song-top-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
     .pill {
       display: inline-block;
-      border: 1px solid rgba(93, 110, 77, .2);
-      background: rgba(93, 110, 77, .07);
-      color: #4a5c3c;
+      border: 1.5px solid rgba(0, 0, 0, .12);
+      background: rgba(0, 0, 0, .05);
+      color: var(--row-pill-text, #4a5c3c);
       border-radius: 999px;
       padding: 1px 7px;
       font-size: 9px;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 1px;
       text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .tom-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      border: 1px solid rgba(184, 139, 55, .3);
-      background: rgba(184, 139, 55, .07);
-      color: var(--gold);
-      border-radius: 999px;
-      padding: 1px 7px;
-      font-size: 9px;
-      font-weight: 600;
-      letter-spacing: .5px;
-      white-space: nowrap;
-      cursor: pointer;
-      transition: background .12s;
-    }
-
-    .tom-badge:hover {
-      background: rgba(184, 139, 55, .14);
-    }
-
-    .tom-badge.empty {
-      color: var(--faint);
-      border-color: var(--border-s);
-      background: none;
+      width: fit-content;
     }
 
     .song-title {
@@ -953,6 +919,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      color: var(--row-title-text, var(--ink));
     }
 
     .song-title.empty {
@@ -961,67 +928,11 @@
       font-weight: 400;
     }
 
-    .vocal-line {
-      font-size: 10px;
-      color: var(--muted);
-      margin-top: 1px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .vocal-line strong {
-      color: var(--ink);
-      font-weight: 600;
-    }
-
-    /* row color theming */
-    .song-row.row-color .pill {
-      background: var(--row-bg);
-      border-color: var(--row-border);
-      color: var(--row-text);
-    }
-
-    .song-row.row-color .num-block {
-      border-right-color: var(--row-border);
-    }
-
-    .row-color-picker {
-      display: flex;
-      gap: 5px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .rcp-swatch {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      border: 2px solid transparent;
-      cursor: pointer;
-      transition: transform .12s, border-color .12s;
-      flex-shrink: 0;
-    }
-
-    .rcp-swatch:hover {
-      transform: scale(1.2);
-    }
-
-    .rcp-swatch.rcp-sel {
-      border-color: var(--ink);
-      transform: scale(1.22);
-    }
-
-    .rcp-clear {
-      background: none !important;
-      border: 1.5px dashed var(--border-s) !important;
-    }
-
-    /* right side tools */
     .song-tools {
-      border-left: 1px solid var(--border);
+      border-left: 1px solid var(--row-tools-border, var(--border));
       display: flex;
       flex-direction: column;
+      background: var(--row-tools-bg, rgba(250, 246, 238, .45));
     }
 
     .tools-row {
@@ -1030,85 +941,124 @@
     }
 
     .tools-row+.tools-row {
-      border-top: 1px solid var(--border);
+      border-top: 1px solid var(--row-tools-border, var(--border));
     }
 
-    .btn-letra,
-    .btn-cifra,
-    .btn-edit,
-    .btn-clear,
-    .btn-drag {
+    /* Letra */
+    .btn-letra {
+      color: #fff;
+      background: rgba(42, 125, 82, .8);
       min-height: 26px;
       border: none;
-      background: transparent;
       font-size: 11px;
-      font-weight: 600;
-      transition: background .12s, color .12s;
+      font-weight: 700;
+      letter-spacing: .2px;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 3px;
-    }
-
-    .btn-letra {
-      color: var(--green);
+      transition: background .13s, transform .1s;
     }
 
     .btn-letra:hover {
-      background: var(--green-bg);
+      background: rgba(42, 125, 82, 1);
+      transform: scale(1.04);
     }
 
+    /* Cifra */
     .btn-cifra {
-      color: var(--blue);
-      border-left: 1px solid var(--border);
-    }
-
-    .btn-cifra:hover {
-      background: var(--blue-bg);
-    }
-
-    .btn-edit {
-      color: var(--muted);
-    }
-
-    .btn-edit:hover {
-      background: var(--paper);
-      color: var(--ink);
-    }
-
-    .btn-clear {
-      color: rgba(155, 53, 37, .55);
-      border-left: 1px solid var(--border);
-    }
-
-    .btn-clear:hover {
-      background: #fff0ed;
-      color: var(--danger);
-    }
-
-    .btn-del-row {
-      color: rgba(155, 53, 37, .7);
-      border-left: 1px solid var(--border);
-      background: none;
+      color: #fff;
+      background: rgba(32, 96, 160, .8);
       min-height: 26px;
+      border: none;
+      border-left: 1.5px solid rgba(255, 255, 255, .18);
       font-size: 11px;
-      font-weight: 600;
-      border-top: none;
-      border-right: none;
-      border-bottom: none;
+      font-weight: 700;
+      letter-spacing: .2px;
       cursor: pointer;
-      transition: background .12s, color .12s;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 3px;
+      transition: background .13s, transform .1s;
+    }
+
+    .btn-cifra:hover {
+      background: rgba(32, 96, 160, 1);
+      transform: scale(1.04);
+    }
+
+    /* Editar */
+    .btn-edit {
+      color: var(--row-btn-edit, var(--muted));
+      min-height: 20px;
+      border: 1px solid var(--row-tools-border, var(--border-s));
+      border-radius: 5px;
+      background: none;
+      margin: 3px 2px 3px 3px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .2px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      transition: background .13s, color .13s;
+    }
+
+    .btn-edit:hover {
+      background: var(--row-num-bg, #e8e4de);
+      color: var(--row-num-text, var(--ink));
+    }
+
+    /* Limpar */
+    .btn-clear {
+      color: var(--danger);
+      min-height: 20px;
+      border: 1px solid rgba(155, 53, 37, .25);
+      border-radius: 5px;
+      background: none;
+      margin: 3px 3px 3px 2px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .2px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      transition: background .13s, color .13s;
+    }
+
+    .btn-clear:hover {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+
+    /* × Excluir */
+    .btn-del-row {
+      color: #fff;
+      background: rgba(155, 53, 37, .72);
+      min-height: 26px;
+      border: none;
+      border-left: 1.5px solid rgba(255, 255, 255, .15);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       padding: 0 8px;
+      transition: background .13s;
     }
 
     .btn-del-row:hover {
-      background: #fff0ed;
-      color: var(--danger);
+      background: var(--danger);
     }
+
 
     /* drag handle row */
     .drag-row {
@@ -1995,6 +1945,81 @@
         font-size: 11px;
       }
     }
+
+    /* ── EMPTY STATE ── */
+    .rep-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem 1rem 3rem;
+      gap: 1.25rem;
+      text-align: center;
+    }
+
+    .rep-empty-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--soft);
+      border: 1.5px solid var(--border-s);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--faint);
+    }
+
+    .rep-empty-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+    }
+
+    .rep-empty p {
+      color: var(--faint);
+      font-family: "Cormorant Garamond", serif;
+      font-style: italic;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    .rep-empty-btn {
+      background: var(--ink);
+      color: var(--gold-s);
+      border: none;
+      border-radius: var(--r);
+      padding: 11px 28px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: "DM Sans", sans-serif;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity .13s, transform .12s;
+      box-shadow: 0 4px 14px rgba(24, 22, 18, .18);
+    }
+
+    .rep-empty-btn:hover {
+      opacity: .87;
+      transform: translateY(-1px);
+    }
+
+    .rep-empty-btn:active {
+      transform: translateY(0);
+    }
+
+    .rep-empty-btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+    }
   </style>
 </head>
 
@@ -2213,7 +2238,7 @@
     <div class="rep-page">
       <div class="topline">
         <div class="tl-left">
-          <span class="tl-label" id="celebLabel">Celebração</span>
+          <span class="tl-label" id="celebLabel">MOMENTO</span>
           <div class="tl-edit-wrap" id="celebEditWrap">
             <input id="celebInput" placeholder="Ex: Missa, Celebração..." />
             <button class="save-btn" onclick="saveCeleb()" style="padding:4px 9px;font-size:10px;">OK</button>
@@ -2373,7 +2398,7 @@
 
     /* ═══════════════ STATE ═══════════════ */
     const MOMENTOS_DEFAULT = ["Invocação", "Acolhida", "Entrada", "Ato Penitencial", "Glória", "Bíblia / Entrada", "Aclamação", "Ladainha", "Ofertório", "Santo", "Cordeiro", "Comunhão I", "Comunhão II / Ação de Graças", "Final"];
-    function makeFreshSongs() { return MOMENTOS_DEFAULT.map((m, i) => ({ id: i + 1, momento: m, titulo: "", tom: "", vocais: "", cor: "", files: [] })); }
+    function makeFreshSongs() { return []; } /* starts empty — user adds songs manually */
 
     let history = [];
     let curSongs = [];
@@ -2412,9 +2437,9 @@
     async function goHistorico() { goScreen("historico"); await loadHistory(); }
 
     function goNewRepertorio() {
-      curRepId = null; curSongs = makeFreshSongs(); curDone = {}; curOpenEd = null; curNextId = 15; curCor = "";
+      curRepId = null; curSongs = []; curDone = {}; curOpenEd = null; curNextId = 1; curCor = "";
       setRepHeader("Novo Repertório", "", "");
-      document.getElementById("celebLabel").textContent = "Celebração";
+      document.getElementById("celebLabel").textContent = "MOMENTO";
       document.getElementById("hep").classList.remove("open");
       goScreen("repertorio"); render();
     }
@@ -2426,12 +2451,12 @@
         if (!rows.length) throw new Error("não encontrado");
         const rep = rows[0];
         curRepId = rep.id;
-        curSongs = (rep.songs || makeFreshSongs()).map(s => ({ files: [], vocais: "", cor: "", ...s }));
+        curSongs = ((rep.songs && rep.songs.length) ? rep.songs : []).map(s => ({ files: [], vocais: "", cor: "", ...s }));
         curCor = rep.cor || "";
         curDone = rep.done || {}; curOpenEd = null;
         curNextId = Math.max(...curSongs.map(s => s.id), 14) + 1;
         setRepHeader(rep.titulo || "Repertório", rep.data_iso || displayToIso(rep.data_evento || ""), rep.data_evento || "");
-        document.getElementById("celebLabel").textContent = rep.celebracao || "Celebração";
+        document.getElementById("celebLabel").textContent = rep.celebracao || "MOMENTO";
         document.getElementById("hep").classList.remove("open");
         goScreen("repertorio"); render();
       } catch (e) { showToast("Erro ao carregar: " + e.message, "err"); }
@@ -2569,24 +2594,61 @@
 
     /* ═══════════════ RENDER SONGS ═══════════════ */
     function pad(n) { return String(n).padStart(2, "0"); }
+    function var_darken(hex) {
+      try {
+        let h = hex.replace("#", "");
+        if (h.length === 3) h = h.split("").map(x => x + x).join("");
+        const r = Math.max(0, parseInt(h.slice(0, 2), 16) - 55);
+        const g = Math.max(0, parseInt(h.slice(2, 4), 16) - 55);
+        const b = Math.max(0, parseInt(h.slice(4, 6), 16) - 55);
+        return "#" + [r, g, b].map(v => v.toString(16).padStart(2, "0")).join("");
+      } catch (e) { return "#111"; }
+    }
 
     function render() {
       const list = document.getElementById("songList"); list.innerHTML = "";
+      if (!curSongs.length) {
+        const empty = document.createElement("div");
+        empty.className = "rep-empty";
+        empty.innerHTML = `
+      <div class="rep-empty-icon">
+        <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      </div>
+      <p>Nenhuma música adicionada ainda.<br>Comece adicionando a primeira.</p>
+      <button class="rep-empty-btn" onclick="addSong()">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adicionar música
+      </button>`;
+        list.appendChild(empty);
+        return;
+      }
       curSongs.forEach((song, idx) => {
         const isDone = !!curDone[song.id];
         const row = document.createElement("article");
         const rowColor = song.cor || "";
         row.className = "song-row" + (curOpenEd === song.id ? " editing" : "") + (isDone ? " done" : "") + (rowColor ? " row-color" : "");
         if (rowColor) {
-          row.style.setProperty("--row-bg", rowColor + "22");
-          row.style.setProperty("--row-border", rowColor + "88");
-          row.style.setProperty("--row-text", rowColor);
-          row.style.borderLeft = `3px solid ${rowColor}`;
+          /* derive a lighter bg and readable text from the chosen color */
+          row.style.background = rowColor + "18";
+          row.style.borderColor = rowColor + "55";
+          /* number block: solid color bg, white text */
+          row.style.setProperty("--row-num-bg", rowColor);
+          row.style.setProperty("--row-num-text", "#fff");
+          row.style.setProperty("--row-num-border", rowColor + "cc");
+          row.style.setProperty("--row-num-chk", "rgba(255,255,255,.5)");
+          /* pill / title */
+          row.style.setProperty("--row-pill-text", rowColor);
+          row.style.setProperty("--row-title-text", var_darken(rowColor));
+          /* tools panel */
+          row.style.setProperty("--row-tools-bg", rowColor + "10");
+          row.style.setProperty("--row-tools-border", rowColor + "33");
+          row.style.setProperty("--row-btn-text", rowColor);
         } else {
-          row.style.removeProperty("--row-bg");
-          row.style.removeProperty("--row-border");
-          row.style.removeProperty("--row-text");
-          row.style.borderLeft = "";
+          row.style.background = "";
+          row.style.borderColor = "";
+          ["--row-num-bg", "--row-num-text", "--row-num-border", "--row-num-chk",
+            "--row-pill-text", "--row-title-text", "--row-tools-bg", "--row-tools-border", "--row-btn-text"]
+            .forEach(v => row.style.removeProperty(v));
         }
         row.draggable = true;
         row.dataset.idx = idx;
@@ -2629,7 +2691,7 @@
             <button class="btn-letra" onclick="openFileByType(${song.id},'letra')">Letra</button>
             <button class="btn-cifra" onclick="openFileByType(${song.id},'cifra')">Cifra</button>
           </div>
-          <div class="tools-row" style="grid-template-columns:1fr 1fr 34px;">
+          <div class="tools-row" style="grid-template-columns:1fr 1fr 30px;align-items:stretch;">
             <button class="btn-edit" onclick="toggleEdit(${song.id})">Editar</button>
             <button class="btn-clear" onclick="clearSong(${song.id})">Limpar</button>
             <button class="btn-del-row" onclick="deleteSong(${song.id})" title="Excluir esta música da lista">
@@ -2997,13 +3059,13 @@
     async function goFromEvent() {
       const name = document.getElementById("epName").value.trim();
       const dateStr = selectedCalDate ? fmtDate(selectedCalDate) : "";
-      curRepId = null; curSongs = makeFreshSongs(); curDone = {}; curOpenEd = null; curNextId = 15;
+      curRepId = null; curSongs = []; curDone = {}; curOpenEd = null; curNextId = 1;
       setRepHeader(name || "Repertório", selectedCalDate ? selectedCalDate.toISOString().slice(0, 10) : "", dateStr);
-      document.getElementById("celebLabel").textContent = "Celebração";
+      document.getElementById("celebLabel").textContent = "MOMENTO";
       document.getElementById("hep").classList.remove("open");
       closeEventPanel();
       try {
-        const payload = { titulo: name || "Repertório", data_evento: dateStr, data_iso: selectedCalDate ? selectedCalDate.toISOString().slice(0, 10) : "", celebracao: "Celebração", songs: curSongs, done: {}, cor: selectedCor || null };
+        const payload = { titulo: name || "Repertório", data_evento: dateStr, data_iso: selectedCalDate ? selectedCalDate.toISOString().slice(0, 10) : "", celebracao: "MOMENTO", songs: curSongs, done: {}, cor: selectedCor || null };
         const rows = await sbFetch("/rest/v1/repertorios", { method: "POST", body: JSON.stringify(payload) });
         if (rows && rows[0]) curRepId = rows[0].id;
       } catch (e) { }
@@ -3037,7 +3099,7 @@
           let added = 0;
           for (const rep of list) {
             try {
-              const payload = { titulo: rep.titulo || "Repertório", data_evento: rep.data_evento || "", celebracao: rep.celebracao || "Celebração", songs: rep.songs || [], done: rep.done || {} };
+              const payload = { titulo: rep.titulo || "Repertório", data_evento: rep.data_evento || "", celebracao: rep.celebracao || "MOMENTO", songs: rep.songs || [], done: rep.done || {} };
               await sbFetch("/rest/v1/repertorios", { method: "POST", body: JSON.stringify(payload), headers: { "Prefer": "return=minimal" } });
               added++;
             } catch (err) { }
